@@ -4,7 +4,7 @@ namespace PostEnot.Toolkits
 {
     public sealed class FoldoutAttribute : PropertyAttribute
     {
-        public FoldoutAttribute(string text) : base(true) => Text = text;
+        public FoldoutAttribute(string text) => Text = text;
 
         public string Text { get; }
     }

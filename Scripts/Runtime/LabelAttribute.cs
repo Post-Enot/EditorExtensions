@@ -2,7 +2,7 @@
 {
     public sealed class LabelAttribute : AdditionalPropertyAttribute
     {
-        public LabelAttribute(string label) : base(true) => Label = label;
+        public LabelAttribute(string label) => Label = label;
 
         public string Label { get; }
     }

@@ -4,7 +4,7 @@ namespace PostEnot.Toolkits
 {
     public sealed class ButtonAttribute : PropertyAttribute
     {
-        public ButtonAttribute(string text, string methodName) : base(true)
+        public ButtonAttribute(string text, string methodName)
         {
             Text = text;
             MethodName = methodName;

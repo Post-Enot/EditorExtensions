@@ -1,7 +1,4 @@
 ﻿namespace PostEnot.Toolkits
 {
-    public sealed class ReadOnlyAttribute : AdditionalPropertyAttribute
-    {
-        public ReadOnlyAttribute() : base(true) {}
-    }
+    public sealed class ReadOnlyAttribute : AdditionalPropertyAttribute {}
 }

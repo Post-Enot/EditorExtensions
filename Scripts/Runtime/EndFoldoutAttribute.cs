@@ -2,8 +2,5 @@
 
 namespace PostEnot.Toolkits
 {
-    public sealed class EndFoldoutAttribute : PropertyAttribute
-    {
-        public EndFoldoutAttribute() : base(true) {}
-    }
+    public sealed class EndFoldoutAttribute : PropertyAttribute {}
 }
