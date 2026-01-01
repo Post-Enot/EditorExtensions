@@ -1,0 +1,12 @@
+{
+  "name": "com.postenot.editorextensions",
+  "version": "0.0.1",
+  "displayName": "Editor Extensions",
+  "description": "",
+  "author": {
+    "name": "PostEnot",
+    "email": "ve.vyshegorodsky.cold@gmail.com",
+    "url": "https://t.me/ProcyonNihil"
+  },
+  "type": "library"
+}
