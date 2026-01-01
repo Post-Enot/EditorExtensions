@@ -1,71 +1,38 @@
 ﻿using PostEnot.Toolkits;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(WithoutFoldoutAttribute))]
-    public sealed class WithoutFoldoutDrawer : DecoratorDrawer
+    public sealed class WithoutFoldoutDrawer : PropertyDrawer
     {
-        public override VisualElement CreatePropertyGUI()
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            VisualElement temp = new()
-            {
-                name = "TEMP",
-            };
-            temp.RegisterCallbackOnce<AttachToPanelEvent>(OnAttachToPanel);
-            return temp;
+            VisualElement container = new();
+            DrawChildrenProperties(container, property);
+            return container;
         }
 
-        private void OnAttachToPanel(AttachToPanelEvent context)
+        private void DrawChildrenProperties(VisualElement container, SerializedProperty property)
         {
-            VisualElement temp = (VisualElement)context.target;
-            PropertyField propertyField = temp.GetFirstAncestorOfType<PropertyField>();
-            temp.userData = propertyField;
-            temp.schedule.Execute(() => AfterOnAttach(propertyField));
-        }
-
-        private void AfterOnAttach(PropertyField propertyField)
-        {
-            SerializedProperty serializedProperty = SerializationUtility.GetSerializedProperty(propertyField);
-            if (serializedProperty.isArray)
+            int depth = property.depth;
+            if (!property.NextVisible(true))
             {
-                ListView listView = propertyField.Q<ListView>();
-                listView.bindItem += BindItem;
-            }
-            else
-            {
-                RemoveFoldoutForElement(propertyField);
-            }
-        }
-
-        private static void BindItem(VisualElement element, int index)
-        {
-            PropertyField propertyField = element as PropertyField;
-            RemoveFoldoutForElement(propertyField);
-        }
-
-        private static void RemoveFoldoutForElement(PropertyField propertyField)
-        {
-            Foldout foldout = propertyField.Q<Foldout>();
-            if (foldout == null)
-            {
-                Debug.Log(foldout);
                 return;
             }
-            foldout.value = true;
-            List<VisualElement> children = new(foldout.Children());
-            foreach (VisualElement child in children)
+            do
             {
-                child.RemoveFromHierarchy();
-                foldout.parent.Add(child);
+                if (property.depth != (depth + 1))
+                {
+                    break;
+                }
+                PropertyField propertyField = new();
+                propertyField.BindProperty(property);
+                container.Add(propertyField);
             }
-            propertyField.userData = foldout;
-            foldout.userData = children;
-            foldout.style.display = DisplayStyle.None;
+            while (property.NextVisible(false));
         }
     }
 }
