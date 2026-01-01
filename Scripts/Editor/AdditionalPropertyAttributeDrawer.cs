@@ -39,6 +39,10 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 propertyField.label = labelAttribute.Label;
             }
+            else if (fieldInfo.HasCustomAttribute<WithoutLabelAttribute>())
+            {
+                propertyField.label = string.Empty;
+            }
 
             if (serializedProperty.isArray)
             {
