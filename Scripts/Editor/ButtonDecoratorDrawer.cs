@@ -13,22 +13,39 @@ namespace PostEnot.EditorExtensions.Editor
         public override VisualElement CreatePropertyGUI()
         {
             ButtonAttribute buttonAttribute = attribute as ButtonAttribute;
-            Button button = new()
+            VisualElement temp = new()
             {
-                userData = buttonAttribute.MethodName,
-                text = buttonAttribute.Text
+                name = "TEMP",
+                userData = buttonAttribute
             };
-            button.RegisterCallbackOnce<AttachToPanelEvent>(OnAttachToPanel);
-            return button;
+            temp.RegisterCallbackOnce<AttachToPanelEvent>(OnAttachToPanel);
+            return temp;
         }
 
         private void OnAttachToPanel(AttachToPanelEvent context)
         {
-            Button button = context.target as Button;
-            PropertyField propertyField = button.GetFirstAncestorOfType<PropertyField>();
+            VisualElement temp = context.target as VisualElement;
+            PropertyField propertyField = temp.GetFirstAncestorOfType<PropertyField>();
             SerializedProperty serializedProperty = SerializationUtility.GetSerializedProperty(propertyField);
             SerializedProperty parentSerializedProperty = SerializationUtility.GetParentProperty(serializedProperty);
-            string methodName = button.userData as string;
+            ButtonAttribute buttonAttribute = temp.userData as ButtonAttribute;
+            string methodName = buttonAttribute.MethodName;
+
+            Button button = new()
+            {
+                text = buttonAttribute.Text,
+            };
+            button.style.marginLeft = 0;
+            button.style.marginRight = 0;
+
+            if (buttonAttribute.Position is ButtonPosition.Down)
+            {
+                propertyField.Add(button);
+            }
+            else if (buttonAttribute.Position is ButtonPosition.Up)
+            {
+                propertyField.Insert(1, button);
+            }
 
             object instance = parentSerializedProperty switch
             {

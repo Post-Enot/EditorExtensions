@@ -7,6 +7,6 @@ namespace PostEnot.Toolkits
     /// </summary>
     public abstract class AdditionalPropertyAttribute : PropertyAttribute
     {
-        public AdditionalPropertyAttribute(bool applyToCollection = false) : base(applyToCollection) {}
+        public AdditionalPropertyAttribute(bool applyToCollection = true) : base(applyToCollection) {}
     }
 }
