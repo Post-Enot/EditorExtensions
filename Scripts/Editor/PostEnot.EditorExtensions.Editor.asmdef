@@ -1,0 +1,18 @@
+{
+    "name": "PostEnot.EditorExtensions.Editor",
+    "rootNamespace": "PostEnot.EditorExtensions.Editor",
+    "references": [
+        "GUID:ee1815bdb202ad443915f7a3215c28ae"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
