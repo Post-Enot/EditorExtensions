@@ -2,8 +2,5 @@
 
 namespace PostEnot.Toolkits
 {
-    public sealed class TagAttribute : PropertyAttribute
-    {
-        public TagAttribute() {}
-    }
+    public sealed class TagAttribute : PropertyAttribute {}
 }

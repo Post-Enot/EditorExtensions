@@ -2,8 +2,5 @@
 
 namespace PostEnot.Toolkits
 {
-    public sealed class LayerAttribute : PropertyAttribute
-    {
-        public LayerAttribute() {}
-    }
+    public sealed class LayerAttribute : PropertyAttribute {}
 }

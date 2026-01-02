@@ -2,8 +2,5 @@
 
 namespace PostEnot.Toolkits
 {
-    public sealed class SceneAttribute : PropertyAttribute
-    {
-        public SceneAttribute() {}
-    }
+    public sealed class SceneAttribute : PropertyAttribute {}
 }
