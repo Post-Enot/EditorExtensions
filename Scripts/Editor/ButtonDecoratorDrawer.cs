@@ -44,7 +44,8 @@ namespace PostEnot.EditorExtensions.Editor
             }
             else if (buttonAttribute.Position is ButtonPosition.Up)
             {
-                propertyField.Insert(1, button);
+                int index = temp.parent.IndexOf(temp);
+                temp.parent.Insert(index, button);
             }
 
             object instance = parentSerializedProperty switch
