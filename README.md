@@ -184,3 +184,17 @@ public struct ItemCostData
 Если значение поля не будет соответствовать какому-либо индексу сцены, будет выведено предупреждение; при этом значение поля не будет перезаписано, во избежание потери данных при активной работе со сценами.
 
 ![](https://github.com/user-attachments/assets/10199bb4-fd2e-4f77-aada-b09927360db4)
+
+## CurveAttribute
+
+Позволяет задать область определения анимационной кривой, а также настроить цвет.
+Цвет передаётся в HEX-представлении ввиде строки: вы можете использовать одну из 157 констант, заданных в `PostEnot.Toolkits.HexColors`, идентичных пресетам цветов `UnityEngine.Color` или же задать собственный цвет. в формате `#RRGGBB` или `#RRGGBBAA`.
+
+```csharp
+[SerializeField, Curve(HexColors.Blue)] private AnimationCurve _curve0;
+[SerializeField, Curve(0, 0, 1, 1)] private AnimationCurve _curve1;
+[SerializeField, Curve(0, 0, 1, 1, HexColors.Red)] private AnimationCurve _curve2;
+```
+
+![](https://github.com/user-attachments/assets/9feb4c8c-c1db-4162-97b3-e67d46d50e38)
+![](https://github.com/user-attachments/assets/6c7ef0eb-6259-4b89-90fa-7c004979bd25)
