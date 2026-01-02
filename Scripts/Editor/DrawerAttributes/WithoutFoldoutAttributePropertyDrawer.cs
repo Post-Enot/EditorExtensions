@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(WithoutFoldoutAttribute))]
-    internal sealed class WithoutFoldoutDrawer : PropertyDrawer
+    internal sealed class WithoutFoldoutAttributePropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {

@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(AdditionalPropertyAttribute), true)]
-    internal sealed class AdditionalPropertyAttributeDrawer : DecoratorDrawer
+    internal sealed class AdditionalPropertyAttributeDecoratorDrawer : DecoratorDrawer
     {
         public override VisualElement CreatePropertyGUI()
         {

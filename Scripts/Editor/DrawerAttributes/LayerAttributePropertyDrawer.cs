@@ -10,9 +10,9 @@ namespace PostEnot.EditorExtensions.Editor
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            if (property.propertyType != SerializedPropertyType.Integer)
+            if (property.propertyType is not SerializedPropertyType.Integer)
             {
-                return new Label($"Implement {nameof(LayerAttribute)} to int field.");
+                return new Label($"Use Layer with int.");
             }
             LayerField layerField = new(preferredLabel, property.intValue);
             layerField.BindProperty(property);

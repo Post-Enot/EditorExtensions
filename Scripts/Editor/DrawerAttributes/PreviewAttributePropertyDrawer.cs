@@ -15,7 +15,7 @@ namespace PostEnot.EditorExtensions.Editor
         {
             if (property.propertyType is not SerializedPropertyType.ExposedReference and not SerializedPropertyType.ObjectReference)
             {
-                return new Label($"Implement {nameof(PreviewAttribute)} to UnityEngine.Object field.");
+                return new Label($"Use Preview with UnityEngine.Object.");
             }
             PreviewAttribute previewAttribute = attribute as PreviewAttribute;
             PropertyField propertyField = new(property, preferredLabel)

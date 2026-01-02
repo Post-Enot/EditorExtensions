@@ -9,13 +9,13 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(CurveAttribute))]
-    internal class CurvePropertyDrawer : PropertyDrawer
+    internal class CurveAttributePropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
             if (property.propertyType is not SerializedPropertyType.AnimationCurve)
             {
-                return new Label($"Implement {nameof(CurveAttribute)} to UnityEngine.AnimationCurve field.");
+                return new Label($"Use Curve with UnityEngine.AnimationCurve.");
             }
             CurveField curveField = new(preferredLabel);
             curveField.BindProperty(property);

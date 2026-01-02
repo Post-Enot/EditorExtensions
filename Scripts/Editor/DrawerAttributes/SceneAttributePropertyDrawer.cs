@@ -76,9 +76,9 @@ namespace PostEnot.EditorExtensions.Editor
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            if (property.propertyType != SerializedPropertyType.Integer)
+            if (property.propertyType is not SerializedPropertyType.Integer)
             {
-                return new Label($"Implement {nameof(SceneAttribute)} to int field.");
+                return new Label($"Use Scene with int.");
             }
             DropdownField dropdownField = new(preferredLabel);
             dropdownField.userData = new DropdownData(dropdownField, property);

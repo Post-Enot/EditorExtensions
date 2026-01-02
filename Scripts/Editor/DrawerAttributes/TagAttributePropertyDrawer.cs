@@ -10,9 +10,9 @@ namespace PostEnot.EditorExtensions.Editor
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            if (property.propertyType != SerializedPropertyType.String)
+            if (property.propertyType is not SerializedPropertyType.String)
             {
-                return new Label($"Implement {nameof(TagAttribute)} to string field.");
+                return new Label($"Use Tag with string.");
             }
             TagField tagField = new(preferredLabel, property.stringValue);
             tagField.BindProperty(property);
