@@ -19,7 +19,7 @@
 Позволяет указать собственную подпись поля в инспекторе.
 
 ```csharp
-[SerializeField, Label("Alpha")] private int _beta;
+[SerializeField, Label("Alpha")] private int beta;
 ```
 
 ![Демонстрация работы атрибута Label](https://github.com/user-attachments/assets/b33b5047-3e86-449d-a49e-3deb21d5910b)
@@ -29,7 +29,7 @@
 Так как UI Toolkit из коробки поддерживает форматирование с помощью тегов, вы можете изменить начертание, цвет и многое что ещё. Ниже представлен простой пример, как сделать подпись красной и жирной.
 
 ```csharp
-[SerializeField, Label("<b><color=\"red\">Alpha")] private int _beta;
+[SerializeField, Label("<b><color=\"red\">Alpha")] private int beta;
 ```
 
 ![Демонстрация кастомизации подписи атрибута Label](https://github.com/user-attachments/assets/a208073c-ace0-4f91-bd33-795e425b1bfb)
@@ -41,7 +41,7 @@
 Скрывает подпись к полю, растягивая по всей ширине инспектора.
 
 ```csharp
-[SerializeField, WithoutLabel] private string _myName = "PostEnot";
+[SerializeField, WithoutLabel] private string myName = "PostEnot";
 ```
 
 ![Демонстрация работы атрибута WithoutLabel](https://github.com/user-attachments/assets/7afc6ba8-4a7e-4092-b1e4-5587fb0e9245)
@@ -51,7 +51,7 @@
 Делает поле неактивным для ввода.
 
 ```csharp
-[SerializeField, ReadOnly] private string _text = "Hello World!";
+[SerializeField, ReadOnly] private string text = "Hello World!";
 ```
 
 ![Демонстрация работы атрибута ReadOnly](https://github.com/user-attachments/assets/4321d84a-7ae5-4b37-8de6-45ececc0e26a)
@@ -61,7 +61,7 @@
 Включает чередование цвета элементов списка.
 
 ```csharp
-[SerializeField, AlternatingRows] private List<int> _list = new List<int>() { 0, 1, 2, 3, 4 };
+[SerializeField, AlternatingRows] private List<int> list = new List<int>() { 0, 1, 2, 3, 4 };
 ```
 
 ![Демонстрация работы атрибута AlternatingRows](https://github.com/user-attachments/assets/5cba9e38-10f7-4c90-bcd8-1674fec3060f)
@@ -72,25 +72,52 @@
 
 ```csharp
 [Foldout("<b>Foldout 1")]
-[SerializeField] private int _var0;
-[SerializeField] private int _var1;
-[SerializeField] private int _var2;
+[SerializeField] private int var0;
+[SerializeField] private int var1;
+[SerializeField] private int var2;
 [EndFoldout]
 
-[SerializeField] private int _var3;
+[SerializeField] private int var3;
 
 [Foldout("Foldout 2")]
-[SerializeField] private int _var4;
-[SerializeField] private int _var5;
-[SerializeField] private int _var6;
+[SerializeField] private int var4;
+[SerializeField] private int var5;
+[SerializeField] private int var6;
 
 [Foldout("Foldout 2")]
-[SerializeField] private int _var7;
-[SerializeField] private int _var8;
-[SerializeField] private int _var9;
+[SerializeField] private int var7;
+[SerializeField] private int var8;
+[SerializeField] private int var9;
 ```
 ![](https://github.com/user-attachments/assets/b4b99ee2-a635-431d-b056-f5953a9a3806)
 ![](https://github.com/user-attachments/assets/5b6ac336-7ac7-46d1-87be-bd9497d9fe5b)
+
+## ButtonAttribute
+
+Добавляет кнопку над полем. На данный момент атрибут применим только к полю, применение к методу не поддерживается.
+
+```csharp
+[Button("Randomize", nameof(Randomize))]
+[SerializeField] private int value;
+
+[SerializeField] private int min = 0;
+[SerializeField] private int max = 100;
+
+private void Randomize() => value = UnityEngine.Random.Range(min, max);
+```
+
+![](https://github.com/user-attachments/assets/d1ed7780-436d-4b3b-baa5-d43ac9345ca5)
+
+По умолчанию кнопка располагается над полем; для того, чтобы разместить кнопку под полем, необходимо изменить значение параметра атрибута `position` на `ButtonPosition.Down`.
+
+```csharp
+[Button("Log Value", nameof(LogMessage), ButtonPosition.Down)]
+[SerializeField] private int value;
+
+private void LogMessage() => Debug.Log(value);
+```
+
+![](https://github.com/user-attachments/assets/ac52602f-6a0f-4b3a-91f9-a44ccebf5770)
 
 ## WithoutFoldoutAttribute
 
@@ -141,29 +168,19 @@ public struct ItemCostData
 
 ![](https://github.com/user-attachments/assets/3a34a068-5224-418f-a143-3bb1769992ed)
 
-## ButtonAttribute
+## SceneAttribute
 
-Добавляет кнопку над полем. На данный момент атрибут применим только к полю, применение к методу не поддерживается.
-
-```csharp
-[Button("Randomize", nameof(Randomize))]
-[SerializeField] private int _value;
-
-[SerializeField] private int _min = 0;
-[SerializeField] private int _max = 100;
-
-private void Randomize() => _value = UnityEngine.Random.Range(_min, _max);
-```
-
-![](https://github.com/user-attachments/assets/d1ed7780-436d-4b3b-baa5-d43ac9345ca5)
-
-По умолчанию кнопка располагается над полем; для того, чтобы разместить кнопку под полем, необходимо изменить значение параметра атрибута `position` на `ButtonPosition.Down`.
+Превращает стандартное `int`-поле в поле ввода индекса сцены: выпадающий список содержит все сцены, включённые в билд, в том числе выключенные. Кнопка рядом с выпадающим списком открывает меню Build Profiles для быстрого и удобного перехода к окну изменения сцен, включённых в билд. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
 
 ```csharp
-[Button("Log Value", nameof(LogMessage), ButtonPosition.Down)]
-[SerializeField] private int _value;
-
-private void LogMessage() => Debug.Log(_value);
+[SerializeField, Scene] private int mainMenuSceneIndex;
 ```
 
-![](https://github.com/user-attachments/assets/ac52602f-6a0f-4b3a-91f9-a44ccebf5770)
+![](https://github.com/user-attachments/assets/018a58be-5782-4323-8c52-29d8995babec)
+![](https://github.com/user-attachments/assets/707c68bc-ca3b-4ffc-ad91-1af442ce7f8c)
+
+Поддерживается автоматическое отслеживание изменений списка сцен, включённых в билд: даже при открытом редакторе изменения отразятся на внешнем виде поля.
+
+Если значение поля не будет соответствовать какому-либо индексу сцены, будет выведено предупреждение; при этом значение поля не будет перезаписано, во избежание потери данных при активной работе со сценами.
+
+![](https://github.com/user-attachments/assets/10199bb4-fd2e-4f77-aada-b09927360db4)
