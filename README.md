@@ -199,6 +199,19 @@ public struct ItemCostData
 ![](https://github.com/user-attachments/assets/9feb4c8c-c1db-4162-97b3-e67d46d50e38)
 ![](https://github.com/user-attachments/assets/6c7ef0eb-6259-4b89-90fa-7c004979bd25)
 
+## PreviewAttribute
+
+Превращает стандартное поле ввода `ObjectField` в поле ввода с превью, демонстрация присвоенный полю ассет. Вы можете задать размер превью с помощью перечисления `PreviewSize`, поддерживающего четыре размера (`Small`, `Medium`, `Big`, `Large`), либо указав размер превью в пикселях самостоятельно. Стандартный размер превью - `Medium` (90px).
+
+```csharp
+[SerializeField, Preview] private GameObject prefabWithDefaultPreview;
+[SerializeField, Preview(PreviewSize.Small)] private GameObject prefabWithSmallPreview;
+[SerializeField, Preview(PreviewSize.Medium)] private GameObject prefabWithMediumPreview;
+[SerializeField, Preview(PreviewSize.Big)] private GameObject prefabWithBigPreview;
+[SerializeField, Preview(PreviewSize.Large)] private GameObject prefabWithLargePreview;
+```
+![](https://github.com/user-attachments/assets/ec5c1bf6-a829-4d16-8238-5fd621fd4dc8)
+
 ## LayerAttribute
 
 Превращает стандартное `int` поле в поле ввода индекса слоя. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
