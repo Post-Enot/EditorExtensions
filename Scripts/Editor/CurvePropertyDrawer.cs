@@ -13,6 +13,10 @@ namespace PostEnot.EditorExtensions.Editor
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
+            if (property.propertyType is not SerializedPropertyType.AnimationCurve)
+            {
+                return new Label($"Implement {nameof(CurveAttribute)} to UnityEngine.AnimationCurve field.");
+            }
             CurveField curveField = new(preferredLabel);
             curveField.BindProperty(property);
             CurveAttribute curveAttribute = attribute as CurveAttribute;
@@ -30,7 +34,6 @@ namespace PostEnot.EditorExtensions.Editor
         {
             if (ColorUtility.TryParseHtmlString(hexColor, out Color color))
             {
-                Debug.Log("SET");
                 Type curveType = typeof(CurveField);
                 FieldInfo fieldInfo = curveType.GetField("m_CurveColor", BindingFlags.NonPublic | BindingFlags.Instance);
                 fieldInfo?.SetValue(curveField, color);

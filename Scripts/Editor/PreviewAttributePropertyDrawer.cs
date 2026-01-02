@@ -13,6 +13,10 @@ namespace PostEnot.EditorExtensions.Editor
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
+            if (property.propertyType is not SerializedPropertyType.ExposedReference and not SerializedPropertyType.ObjectReference)
+            {
+                return new Label($"Implement {nameof(PreviewAttribute)} to UnityEngine.Object field.");
+            }
             PreviewAttribute previewAttribute = attribute as PreviewAttribute;
             PropertyField propertyField = new(property, preferredLabel)
             {
@@ -26,6 +30,11 @@ namespace PostEnot.EditorExtensions.Editor
         private void OnAttachToPanel(AttachToPanelEvent context)
         {
             PropertyField propertyField = context.target as PropertyField;
+            propertyField.schedule.Execute(() => AfterAttach(propertyField));
+        }
+
+        private void AfterAttach(PropertyField propertyField)
+        {
             PreviewAttribute previewAttribute = propertyField.userData as PreviewAttribute;
             ObjectField objectField = propertyField.Q<ObjectField>();
             VisualElement input = objectField.Q<VisualElement>(className: "unity-object-field__input");
