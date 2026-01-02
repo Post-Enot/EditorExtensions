@@ -101,6 +101,7 @@ namespace PostEnot.EditorExtensions.Editor
             container.Add(button);
             sceneField.Add(container);
             dropdownField.style.flexGrow = 1;
+            dropdownField.AddToClassList(BaseField<string>.alignedFieldUssClassName);
             container.style.flexDirection = FlexDirection.Row;
             return sceneField;
         }
