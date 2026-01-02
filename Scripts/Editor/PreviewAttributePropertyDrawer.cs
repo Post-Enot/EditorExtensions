@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(PreviewAttribute))]
-    public sealed class PreviewAttributePropertyDrawer : PropertyDrawer
+    internal sealed class PreviewAttributePropertyDrawer : PropertyDrawer
     {
         [SerializeField] private StyleSheet styleSheet;
 
