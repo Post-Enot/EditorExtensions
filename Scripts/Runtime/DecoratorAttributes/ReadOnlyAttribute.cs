@@ -1,4 +1,4 @@
 ﻿namespace PostEnot.Toolkits
 {
-    public sealed class ReadOnlyAttribute : AdditionalPropertyAttribute {}
+    public sealed class ReadOnlyAttribute : DecoratorPropertyAttribute {}
 }
