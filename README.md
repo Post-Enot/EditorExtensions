@@ -170,7 +170,7 @@ public struct ItemCostData
 
 ## SceneAttribute
 
-Превращает стандартное `int`-поле в поле ввода индекса сцены: выпадающий список содержит все сцены, включённые в билд, в том числе выключенные. Кнопка рядом с выпадающим списком открывает меню Build Profiles для быстрого и удобного перехода к окну изменения сцен, включённых в билд. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
+Превращает стандартное `int` поле в поле ввода индекса сцены: выпадающий список содержит все сцены, включённые в билд, в том числе выключенные. Кнопка рядом с выпадающим списком открывает меню Build Profiles для быстрого и удобного перехода к окну изменения сцен, включённых в билд. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
 
 ```csharp
 [SerializeField, Scene] private int mainMenuSceneIndex;
@@ -191,10 +191,30 @@ public struct ItemCostData
 Цвет передаётся в HEX-представлении ввиде строки: вы можете использовать одну из 157 констант, заданных в `PostEnot.Toolkits.HexColors`, идентичных пресетам цветов `UnityEngine.Color` или же задать собственный цвет. в формате `#RRGGBB` или `#RRGGBBAA`.
 
 ```csharp
-[SerializeField, Curve(HexColors.Blue)] private AnimationCurve _curve0;
-[SerializeField, Curve(0, 0, 1, 1)] private AnimationCurve _curve1;
-[SerializeField, Curve(0, 0, 1, 1, HexColors.Red)] private AnimationCurve _curve2;
+[SerializeField, Curve(HexColors.Blue)] private AnimationCurve curve0;
+[SerializeField, Curve(0, 0, 1, 1)] private AnimationCurve curve1;
+[SerializeField, Curve(0, 0, 1, 1, HexColors.Red)] private AnimationCurve curve2;
 ```
 
 ![](https://github.com/user-attachments/assets/9feb4c8c-c1db-4162-97b3-e67d46d50e38)
 ![](https://github.com/user-attachments/assets/6c7ef0eb-6259-4b89-90fa-7c004979bd25)
+
+## LayerAttribute
+
+Превращает стандартное `int` поле в поле ввода индекса слоя. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
+
+```csharp
+[SerializeField, Layer] private int geometryLayer;
+```
+
+![](https://github.com/user-attachments/assets/28d3b483-685f-4d7f-988c-5f75d45868a1)
+
+## TagAttribute
+
+Превращает стаднартное `string` поле в поле ввода тега. Тег применим только к полю типа `string`.
+
+```csharp
+[SerializeField, Tag] private string coinTag;
+```
+
+![](https://github.com/user-attachments/assets/5cecae41-bbb4-4146-bbcf-38f42921d01a)
