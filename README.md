@@ -92,33 +92,6 @@
 ![](https://github.com/user-attachments/assets/b4b99ee2-a635-431d-b056-f5953a9a3806)
 ![](https://github.com/user-attachments/assets/5b6ac336-7ac7-46d1-87be-bd9497d9fe5b)
 
-## ButtonAttribute
-
-Добавляет кнопку над полем. На данный момент атрибут применим только к полю, применение к методу не поддерживается.
-
-```csharp
-[Button("Randomize", nameof(Randomize))]
-[SerializeField] private int value;
-
-[SerializeField] private int min = 0;
-[SerializeField] private int max = 100;
-
-private void Randomize() => value = UnityEngine.Random.Range(min, max);
-```
-
-![](https://github.com/user-attachments/assets/d1ed7780-436d-4b3b-baa5-d43ac9345ca5)
-
-По умолчанию кнопка располагается над полем; для того, чтобы разместить кнопку под полем, необходимо изменить значение параметра атрибута `position` на `ButtonPosition.Down`.
-
-```csharp
-[Button("Log Value", nameof(LogMessage), ButtonPosition.Down)]
-[SerializeField] private int value;
-
-private void LogMessage() => Debug.Log(value);
-```
-
-![](https://github.com/user-attachments/assets/ac52602f-6a0f-4b3a-91f9-a44ccebf5770)
-
 ## WithoutFoldoutAttribute
 
 Убирает раскрывающийся список у представлений классов и структур, помеченных атрибутом `Serializable`.
@@ -231,3 +204,58 @@ public struct ItemCostData
 ```
 
 ![](https://github.com/user-attachments/assets/5cecae41-bbb4-4146-bbcf-38f42921d01a)
+
+## Декоративные атрибуты
+
+Декоративные атрибуты не изменяют само отображение поля ввода, но добавляют в инспектор дополнительные элементы. Все декоративные атрибуты поддерживают множественное применение к одному и тому же полю.
+
+По умолчанию все декораторы размещаются над полем ввода. В некоторых случаях вам может потребоваться разместить декораторы под полем ввода; для этого необходимо установить значение `DrawMode` атрибута на `AttributeDrawMode.After`.
+
+```csharp
+[Button("Log Value", nameof(LogMessage), AttributeDrawMode.After)]
+[SerializeField] private int value;
+
+private void LogMessage() => Debug.Log(value);
+```
+
+![](https://github.com/user-attachments/assets/ac52602f-6a0f-4b3a-91f9-a44ccebf5770)
+
+### ButtonAttribute
+
+Добавляет кнопку. На данный момент атрибут применим только к полю, применение к методу не поддерживается.
+
+```csharp
+[Button("Randomize", nameof(Randomize))]
+[SerializeField] private int value;
+
+[SerializeField] private int min = 0;
+[SerializeField] private int max = 100;
+
+private void Randomize() => value = UnityEngine.Random.Range(min, max);
+```
+
+![](https://github.com/user-attachments/assets/d1ed7780-436d-4b3b-baa5-d43ac9345ca5)
+
+### LineAttribute
+
+Добавляет горизонтальную линию. С помощью значений атрибута вы можете настроить её толщину, а также цвет.
+
+```csharp
+[Line(HexColors.Blue)]
+[Line(5)]
+[Line(HexColors.Green, 5)]
+[SerializeField] private int field0;
+```
+
+![](https://github.com/user-attachments/assets/87cbd2da-b463-4d5e-9587-8d5d082d295c)
+
+Вы можете получить достаточно интересные результаты, совмещая `LineAttribute` с другими: например, `HeaderAttribute`.
+
+```csharp
+[Header("Portrets:")]
+[Line]
+[SerializeField, Preview, Label("Hero One")] private Sprite heroOnePortret;
+[SerializeField, Preview, Label("Hero Two")] private Sprite heroTwoPortret;
+```
+
+![](https://github.com/user-attachments/assets/e28dd647-1cc8-4095-96f2-e3259c92977f)
