@@ -1,0 +1,9 @@
+.pe-slider__mini-label {
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    -unity-font-style: normal;
+    font-size: 10px;
+    color: var(--unity-colors-separator-background);
+}

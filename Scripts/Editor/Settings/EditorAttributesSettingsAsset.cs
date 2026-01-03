@@ -14,11 +14,13 @@ namespace PostEnot.EditorExtensions.Editor
         #region Inspector
         [Header("Style Sheets:")]
         [SerializeField, Label("Line Decorator")] private StyleSheet lineDecoratorStyleSheet;
+        [SerializeField, Label("Slider")] private StyleSheet sliderStyleSheet;
         #endregion
 
-        private static EditorAttributesSettingsAsset _instance;
-
         public StyleSheet LineDecoratorStyleSheet => lineDecoratorStyleSheet;
+        public StyleSheet SliderStyleSheet => sliderStyleSheet;
+
+        private static EditorAttributesSettingsAsset _instance;
 
         public static EditorAttributesSettingsAsset GetSettings()
         {
