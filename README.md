@@ -205,6 +205,17 @@ public struct ItemCostData
 
 ![](https://github.com/user-attachments/assets/5cecae41-bbb4-4146-bbcf-38f42921d01a)
 
+### SliderAttribute
+
+Является аналогом `UnityEngine.RangeAttribute`, но с большими возможностями кастомизации; позволяет добавлять подписи для минимальных и максимальных значений на мотив полей в инспекторе `AudioSource`.
+
+```csharp
+[SerializeField, Slider(0, 1)] private float precipitationChance;
+[SerializeField, Slider(-90, 90, "Left", "Right")] private float courseDeviation;
+```
+
+![](https://github.com/user-attachments/assets/9238fc00-9395-4b80-9061-95539a44df5b)
+
 ## Декоративные атрибуты
 
 Декоративные атрибуты не изменяют само отображение поля ввода, но добавляют в инспектор дополнительные элементы. Все декоративные атрибуты поддерживают множественное применение к одному и тому же полю.
