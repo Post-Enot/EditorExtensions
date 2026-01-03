@@ -259,3 +259,18 @@ private void Randomize() => value = UnityEngine.Random.Range(min, max);
 ```
 
 ![](https://github.com/user-attachments/assets/e28dd647-1cc8-4095-96f2-e3259c92977f)
+
+### HelpBoxAttribute
+
+Добавляет поле с сообщением. С помощью значений атрибута можно настроить как само сообщение, так и его тип. Значение `messageType` по умолчанию - `HelpBoxMessageType.None` (без иконки).
+
+```csharp
+[HelpBox("Default")]
+[HelpBox("None: Hello World!", HelpBoxMessageType.None)]
+[HelpBox("Info: Hello World!", HelpBoxMessageType.Info)]
+[HelpBox("Warning: Hello World!", HelpBoxMessageType.Warning)]
+[HelpBox("Error: Hello World!", HelpBoxMessageType.Error)]
+[SerializeField] private int var;
+```
+
+![](https://github.com/user-attachments/assets/a353393e-df3f-4d46-b4ae-ca18702a019a)
