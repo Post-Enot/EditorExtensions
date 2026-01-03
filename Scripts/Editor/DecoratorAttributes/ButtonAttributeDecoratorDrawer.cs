@@ -12,11 +12,10 @@ namespace PostEnot.EditorExtensions.Editor
     {
         public override VisualElement CreatePropertyGUI()
         {
-            ButtonAttribute buttonAttribute = attribute as ButtonAttribute;
             VisualElement temp = new()
             {
                 name = "TEMP",
-                userData = buttonAttribute
+                userData = attribute
             };
             temp.RegisterCallbackOnce<AttachToPanelEvent>(OnAttachToPanel);
             return temp;
@@ -37,17 +36,7 @@ namespace PostEnot.EditorExtensions.Editor
             };
             button.style.marginLeft = 0;
             button.style.marginRight = 0;
-
-            if (buttonAttribute.Position is ButtonPosition.Down)
-            {
-                propertyField.Add(button);
-            }
-            else if (buttonAttribute.Position is ButtonPosition.Up)
-            {
-                int index = temp.parent.IndexOf(temp);
-                temp.parent.Insert(index, button);
-            }
-
+            DrawerUtility.ApplyDrawMode(buttonAttribute.DrawMode, temp, button);
             object instance = parentSerializedProperty switch
             {
                 null => serializedProperty.serializedObject.targetObject,
