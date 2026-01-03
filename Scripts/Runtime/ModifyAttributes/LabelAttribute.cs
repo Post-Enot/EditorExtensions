@@ -1,6 +1,6 @@
 ﻿namespace PostEnot.Toolkits
 {
-    public sealed class LabelAttribute : DecoratorPropertyAttribute
+    public sealed class LabelAttribute : ModifyPropertyAttribute
     {
         public LabelAttribute(string label) => Label = label;
 

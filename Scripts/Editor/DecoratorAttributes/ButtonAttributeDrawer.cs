@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(ButtonAttribute))]
-    internal sealed class ButtonAttributeDecoratorDrawer : DecoratorDrawer
+    internal sealed class ButtonAttributeDrawer : DecoratorDrawer
     {
         public override VisualElement CreatePropertyGUI()
         {

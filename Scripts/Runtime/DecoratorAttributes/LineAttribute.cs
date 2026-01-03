@@ -1,33 +1,20 @@
-﻿using System;
-
-namespace PostEnot.Toolkits
+﻿namespace PostEnot.Toolkits
 {
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, Inherited = true, AllowMultiple = true)]
     public sealed class LineAttribute : DecoratorPropertyAttribute
     {
-        public LineAttribute(AttributeDrawMode drawMode = AttributeDrawMode.Before) => DrawMode = drawMode;
+        public LineAttribute(AttributeDrawMode drawMode = AttributeDrawMode.Before) : base(drawMode) {}
 
-        public LineAttribute(string hexColor, AttributeDrawMode drawMode = AttributeDrawMode.Before)
-        {
-            HexColor = hexColor;
-            DrawMode = drawMode;
-        }
+        public LineAttribute(string hexColor, AttributeDrawMode drawMode = AttributeDrawMode.Before) : base(drawMode) => HexColor = hexColor;
 
-        public LineAttribute(int heightInPixels, AttributeDrawMode drawMode = AttributeDrawMode.Before)
-        {
-            HeightInPixels = heightInPixels;
-            DrawMode = drawMode;
-        }
+        public LineAttribute(int heightInPixels, AttributeDrawMode drawMode = AttributeDrawMode.Before) : base(drawMode) => HeightInPixels = heightInPixels;
 
-        public LineAttribute(string hexColor, int heightInPixels, AttributeDrawMode drawMode = AttributeDrawMode.Before)
+        public LineAttribute(string hexColor, int heightInPixels, AttributeDrawMode drawMode = AttributeDrawMode.Before) : base(drawMode)
         {
             HexColor = hexColor;
             HeightInPixels = heightInPixels;
-            DrawMode = drawMode;
         }
 
         public int HeightInPixels { get; }
         public string HexColor { get; }
-        public AttributeDrawMode DrawMode { get; }
     }
 }

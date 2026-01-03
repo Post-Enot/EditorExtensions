@@ -1,6 +1,6 @@
 ﻿namespace PostEnot.Toolkits
 {
-    public sealed class AlternatingRowsAttribute : DecoratorPropertyAttribute
+    public sealed class AlternatingRowsAttribute : ModifyPropertyAttribute
     {
         public AlternatingRowsAttribute(bool contentOnly = false) => ContentOnly = contentOnly;
 

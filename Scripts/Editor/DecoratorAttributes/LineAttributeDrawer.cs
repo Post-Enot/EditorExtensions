@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(LineAttribute))]
-    internal sealed class LineAttributeDecoratorDrawer : DecoratorDrawer
+    internal sealed class LineAttributeDrawer : DecoratorDrawer
     {
         public override VisualElement CreatePropertyGUI()
         {
