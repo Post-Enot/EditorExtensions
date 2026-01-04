@@ -17,12 +17,14 @@ namespace PostEnot.EditorExtensions.Editor
         [SerializeField, Label("Slider")]         private StyleSheet sliderStyleSheet;
         [SerializeField, Label("Vector Labels")]  private StyleSheet vectorLabelsStyleSheet;
         [SerializeField, Label("Table")]          private StyleSheet tableStyleSheet;
+        [SerializeField, Label("Preview")]        private StyleSheet previewStyleSheet;
         #endregion
 
         public StyleSheet LineDecoratorStyleSheet => lineDecoratorStyleSheet;
         public StyleSheet SliderStyleSheet => sliderStyleSheet;
         public StyleSheet VectorLabelsStyleSheet => vectorLabelsStyleSheet;
         public StyleSheet TableStyleSheet => tableStyleSheet;
+        public StyleSheet PreviewStyleSheet => previewStyleSheet;
 
         private static EditorAttributesSettingsAsset _instance;
 

@@ -1,4 +1,5 @@
 ﻿using PostEnot.Toolkits;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -7,45 +8,32 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(PreviewAttribute))]
-    internal sealed class PreviewAttributePropertyDrawer : PropertyDrawer
+    internal sealed class PreviewAttributePropertyDrawer : BasePropertyDrawer<PreviewAttribute>
     {
-        [SerializeField] private StyleSheet styleSheet;
-
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        private protected override VisualElement CreateProperty(SerializedProperty property, FieldInfo fieldInfo, PreviewAttribute attribute)
         {
             if (property.propertyType is not SerializedPropertyType.ExposedReference and not SerializedPropertyType.ObjectReference)
             {
                 return new Label($"Use Preview with UnityEngine.Object.");
             }
-            PreviewAttribute previewAttribute = attribute as PreviewAttribute;
-            PropertyField propertyField = new(property, preferredLabel)
+            ObjectField objectField = new()
             {
-                userData = previewAttribute
+                objectType = fieldInfo.FieldType
             };
-            propertyField.BindProperty(property);
-            propertyField.RegisterCallbackOnce<AttachToPanelEvent>(OnAttachToPanel);
-            return propertyField;
-        }
-
-        private void OnAttachToPanel(AttachToPanelEvent context)
-        {
-            PropertyField propertyField = context.target as PropertyField;
-            propertyField.schedule.Execute(() => AfterAttach(propertyField));
-        }
-
-        private void AfterAttach(PropertyField propertyField)
-        {
-            PreviewAttribute previewAttribute = propertyField.userData as PreviewAttribute;
-            ObjectField objectField = propertyField.Q<ObjectField>();
             VisualElement input = objectField.Q<VisualElement>(className: "unity-object-field__input");
-            Length length = new(previewAttribute.SizeInPixels, LengthUnit.Pixel);
+            Length length = new(attribute.SizeInPixels, LengthUnit.Pixel);
             input.style.minWidth = length;
             input.style.width = length;
             input.style.maxWidth = length;
             objectField.RegisterValueChangedCallback(OnValueChanged);
             objectField.AddToClassList("pe-preview-object-field");
-            objectField.styleSheets.Add(styleSheet);
+            if (Settings.PreviewStyleSheet != null)
+            {
+                objectField.styleSheets.Add(Settings.PreviewStyleSheet);
+            }
             objectField.AddToClassList(BaseField<Object>.alignedFieldUssClassName);
+            objectField.BindProperty(property);
+            return objectField;
         }
 
         private void OnValueChanged(ChangeEvent<Object> context)

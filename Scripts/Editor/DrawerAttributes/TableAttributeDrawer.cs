@@ -18,7 +18,8 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 return new Label("Use Table with collections.");
             }
-            List<FieldInfo> elementFieldInfos = GetSerializableFieldsFromCollectionElement(fieldInfo);
+            Type elementType = SerializationUtility.GetElementTypeOfSerializedCollection(fieldInfo.FieldType);
+            List<FieldInfo> elementFieldInfos = GetSerializableFieldsFromCollectionElement(elementType);
             MultiColumnListView multiColumnListView = new()
             {
                 showAlternatingRowBackgrounds = attribute.AlternatingRows,
@@ -67,9 +68,8 @@ namespace PostEnot.EditorExtensions.Editor
             return hiddenColumnPathes;
         }
 
-        private static List<FieldInfo> GetSerializableFieldsFromCollectionElement(FieldInfo fieldInfo)
+        private static List<FieldInfo> GetSerializableFieldsFromCollectionElement(Type elementType)
         {
-            Type elementType = SerializationUtility.GetElementTypeOfSerializedCollection(fieldInfo.FieldType);
             FieldInfo[] allFields = elementType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             List<FieldInfo> result = new();
             foreach (FieldInfo field in allFields)
