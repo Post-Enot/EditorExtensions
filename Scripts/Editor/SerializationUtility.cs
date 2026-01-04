@@ -9,6 +9,55 @@ namespace PostEnot.EditorExtensions.Editor
 {
     internal static class SerializationUtility
     {
+        internal static int GetArrayIndexFromPath(ReadOnlySpan<char> propertyPath)
+        {
+            if (propertyPath.IsEmpty)
+            {
+                return -1;
+            }
+            int lastIndex = propertyPath.Length - 1;
+            if (propertyPath[lastIndex] != ']')
+            {
+                return -1;
+            }
+            int result = 0;
+            int multiplier = 1;
+            for (int i = lastIndex - 1; i >= 0; i -= 1)
+            {
+                char ch = propertyPath[i];
+                if (ch == '[')
+                {
+                    return multiplier == 1 ? -1 : result;
+                }
+                if (!char.IsDigit(ch))
+                {
+                    return -1;
+                }
+                int digit = ch - '0';
+                checked
+                {
+                    result += digit * multiplier;
+                }
+                multiplier *= 10;
+            }
+            return -1;
+        }
+
+        internal static Type GetElementTypeOfSerializedCollection(Type type)
+        {
+            if (type.IsArray)
+            {
+                return type.GetElementType();
+            }
+            Type genericTypeDefinition = type.GetGenericTypeDefinition();
+            if (genericTypeDefinition == typeof(List<>))
+            {
+                Type[] genericTypes = type.GetGenericArguments();
+                return genericTypes[0];
+            }
+            return null;
+        }
+
         internal static MethodInfo FindMethod(Type type, string methodName)
             => type.GetMethod(
                 methodName,
