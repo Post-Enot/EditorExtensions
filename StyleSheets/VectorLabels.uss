@@ -1,0 +1,15 @@
+.pe-vector-labels .unity-composite-field__input > .unity-composite-field__field {
+    max-width: 50%;
+}
+
+.pe-vector-labels .unity-composite-field__input > .unity-composite-field__field-spacer {
+    display: none;
+}
+
+.pe-vector-labels__last-composite-field {
+    margin-right: 0;
+}
+
+.pe-vector-labels .unity-composite-field__input > .unity-composite-field__field > .unity-base-field__label {
+    margin-right: 2px;
+}

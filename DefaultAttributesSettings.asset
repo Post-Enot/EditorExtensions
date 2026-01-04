@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: PostEnot.EditorExtensions.Editor::PostEnot.EditorExtensions.Editor.EditorAttributesSettingsAsset
   lineDecoratorStyleSheet: {fileID: 7433441132597879392, guid: b0495e2e88a32e44ab8b57ec091b61bd, type: 3}
   sliderStyleSheet: {fileID: 7433441132597879392, guid: 4a98ec65ff2179f469c0fcdc29bfae14, type: 3}
+  vectorLabelsStyleSheet: {fileID: 7433441132597879392, guid: 3b36845dcc7f30f4496d3f88799c09e0, type: 3}
