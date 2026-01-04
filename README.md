@@ -14,58 +14,6 @@
 
 Ниже подробно описаны все предоставляемые атрибуты, способы и особенности использования.
 
-## LabelAttribute
-
-Позволяет указать собственную подпись поля в инспекторе.
-
-```csharp
-[SerializeField, Label("Alpha")] private int beta;
-```
-
-![Демонстрация работы атрибута Label](https://github.com/user-attachments/assets/b33b5047-3e86-449d-a49e-3deb21d5910b)
-
-**Ещё больше кастомизации**
-
-Так как UI Toolkit из коробки поддерживает форматирование с помощью тегов, вы можете изменить начертание, цвет и многое что ещё. Ниже представлен простой пример, как сделать подпись красной и жирной.
-
-```csharp
-[SerializeField, Label("<b><color=\"red\">Alpha")] private int beta;
-```
-
-![Демонстрация кастомизации подписи атрибута Label](https://github.com/user-attachments/assets/a208073c-ace0-4f91-bd33-795e425b1bfb)
-
-Подробнее о тегах форматирования текста можно узнать [здесь](https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-rich-text-tags.html).
-
-## WithoutLabelAttribute
-
-Скрывает подпись к полю, растягивая по всей ширине инспектора.
-
-```csharp
-[SerializeField, WithoutLabel] private string myName = "PostEnot";
-```
-
-![Демонстрация работы атрибута WithoutLabel](https://github.com/user-attachments/assets/7afc6ba8-4a7e-4092-b1e4-5587fb0e9245)
-
-## ReadOnlyAttribute
-
-Делает поле неактивным для ввода.
-
-```csharp
-[SerializeField, ReadOnly] private string text = "Hello World!";
-```
-
-![Демонстрация работы атрибута ReadOnly](https://github.com/user-attachments/assets/4321d84a-7ae5-4b37-8de6-45ececc0e26a)
-
-## AlternatingRowsAttribute
-
-Включает чередование цвета элементов списка.
-
-```csharp
-[SerializeField, AlternatingRows] private List<int> list = new List<int>() { 0, 1, 2, 3, 4 };
-```
-
-![Демонстрация работы атрибута AlternatingRows](https://github.com/user-attachments/assets/5cba9e38-10f7-4c90-bcd8-1674fec3060f)
-
 ## FoldoutAttribute, EndFoldoutAttribute
 
 Перемещает поле атрибута, а также все поля ниже в раскрывающийся список. Перемещение происходит до следующего `FoldoutAttribute` или `EndFoldoutAttribute`. На данный момент вложенные раскрывающиеся списки не поддерживаются.
@@ -215,6 +163,91 @@ public struct ItemCostData
 ```
 
 ![](https://github.com/user-attachments/assets/9238fc00-9395-4b80-9061-95539a44df5b)
+
+## Модифицирующие атрибуты
+
+### LabelAttribute
+
+Позволяет указать собственную подпись поля в инспекторе.
+
+```csharp
+[SerializeField, Label("Alpha")] private int beta;
+```
+
+![Демонстрация работы атрибута Label](https://github.com/user-attachments/assets/b33b5047-3e86-449d-a49e-3deb21d5910b)
+
+**Ещё больше кастомизации**
+
+Так как UI Toolkit из коробки поддерживает форматирование с помощью тегов, вы можете изменить начертание, цвет и многое что ещё. Ниже представлен простой пример, как сделать подпись красной и жирной.
+
+```csharp
+[SerializeField, Label("<b><color=\"red\">Alpha")] private int beta;
+```
+
+![Демонстрация кастомизации подписи атрибута Label](https://github.com/user-attachments/assets/a208073c-ace0-4f91-bd33-795e425b1bfb)
+
+Подробнее о тегах форматирования текста можно узнать [здесь](https://docs.unity3d.com/6000.3/Documentation/Manual/UIE-rich-text-tags.html).
+
+### VectorLabelsAttribute
+
+Изменяет подписи к полям ввода осей вектора. Аттрибут применим к полям типа `Vector2`, `Vector2Int`, `Vector3`, `Vector3Int`.
+
+Стандартные подписи к полям ввода имеют фиксированную ширину 15 пикселей; атрибут меняет логику отображения полей, выставляя ширину, достаточную, чтобы уместить весь текст самой длинной подписи, а также убирая отступ справа для `Vector2` и `Vector2Int` полей.
+
+При необходимости вы можете самостоятельно установить ширину для каждого из полей; также, вы можете убрать подпись, передав пустую строку для конкретной оси.
+
+Одно из наиболее интересных применений атрибута - превращение простого `Vector2`-поля в Min-Max поле для задачи границ.
+
+```csharp
+        [Header("Default:")]
+        [SerializeField] private Vector2    default2;
+        [SerializeField] private Vector2Int default2int;
+        [SerializeField] private Vector3    default3;
+        [SerializeField] private Vector3Int default3Int;
+
+        [Header("String:")]
+        [SerializeField, VectorLabels("Min", "Max")] private Vector2 minMaxField;
+        [SerializeField, VectorLabels("Min", "Max")] private Vector2Int minMaxIntField;
+        [SerializeField, VectorLabels("Min", "Middle", "Max")] private Vector3    minMiddleMaxField;
+        [SerializeField, VectorLabels("Min", "Middle", "Max")] private Vector3Int minMiddleMaxIntField;
+
+        [Header("None:")]
+        [SerializeField, VectorLabels] private Vector2 none2;
+        [SerializeField, VectorLabels] private Vector3 none3;
+        [SerializeField, VectorLabels("", "Middle", "Max")] private Vector3 partialNone3;
+```
+
+![](https://github.com/user-attachments/assets/03855fcd-4887-49cd-ad98-014bbdcf10ef)
+
+### WithoutLabelAttribute
+
+Скрывает подпись к полю, растягивая по всей ширине инспектора.
+
+```csharp
+[SerializeField, WithoutLabel] private string myName = "PostEnot";
+```
+
+![Демонстрация работы атрибута WithoutLabel](https://github.com/user-attachments/assets/7afc6ba8-4a7e-4092-b1e4-5587fb0e9245)
+
+### ReadOnlyAttribute
+
+Делает поле неактивным для ввода.
+
+```csharp
+[SerializeField, ReadOnly] private string text = "Hello World!";
+```
+
+![Демонстрация работы атрибута ReadOnly](https://github.com/user-attachments/assets/4321d84a-7ae5-4b37-8de6-45ececc0e26a)
+
+### AlternatingRowsAttribute
+
+Включает чередование цвета элементов списка.
+
+```csharp
+[SerializeField, AlternatingRows] private List<int> list = new List<int>() { 0, 1, 2, 3, 4 };
+```
+
+![Демонстрация работы атрибута AlternatingRows](https://github.com/user-attachments/assets/5cba9e38-10f7-4c90-bcd8-1674fec3060f)
 
 ## Декоративные атрибуты
 
