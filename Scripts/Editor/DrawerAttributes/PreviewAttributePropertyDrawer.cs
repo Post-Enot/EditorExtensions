@@ -18,7 +18,8 @@ namespace PostEnot.EditorExtensions.Editor
             }
             ObjectField objectField = new()
             {
-                objectType = fieldInfo.FieldType
+                objectType = fieldInfo.FieldType,
+                label = preferredLabel
             };
             VisualElement input = objectField.Q<VisualElement>(className: "unity-object-field__input");
             Length length = new(attribute.SizeInPixels, LengthUnit.Pixel);

@@ -16,7 +16,7 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             LabelAttribute attribute)
         {
-            if (propertyField != null)
+            if ((propertyField != null) && (propertyField.label != string.Empty))
             {
                 propertyField.label = attribute.Label;
             }

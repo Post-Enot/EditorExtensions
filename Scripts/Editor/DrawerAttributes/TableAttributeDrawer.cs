@@ -41,10 +41,11 @@ namespace PostEnot.EditorExtensions.Editor
                 {
                     continue;
                 }
+                LabelAttribute labelAttrubte = elementFieldInfo.GetCustomAttribute<LabelAttribute>();
                 Column column = new()
                 {
                     bindingPath = elementFieldInfo.Name,
-                    title = ObjectNames.NicifyVariableName(elementFieldInfo.Name),
+                    title = labelAttrubte != null ? labelAttrubte.Label : ObjectNames.NicifyVariableName(elementFieldInfo.Name),
                     stretchable = true
                 };
                 multiColumnListView.columns.Add(column);
