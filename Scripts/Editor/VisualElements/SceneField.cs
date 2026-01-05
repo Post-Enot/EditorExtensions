@@ -23,7 +23,7 @@ namespace PostEnot.EditorExtensions.Editor
         private protected override void OnBeforeMenuShow(AbstractGenericMenu menu)
         {
             menu.AddSeparator(string.Empty);
-            menu.AddItem("Open Build Profiles...", false, OpunBuildProfiles);
+            menu.AddItem("Open Build Profiles...", false, OpenBuildProfiles);
         }
 
         private void UpdateChoices()
@@ -37,11 +37,13 @@ namespace PostEnot.EditorExtensions.Editor
             ChoicedUpdated?.Invoke();
         }
 
+        #region EventHandlers
         private void OnAttachToPanel(AttachToPanelEvent context) => EditorBuildSettings.sceneListChanged += OnSceneListChanged;
 
         private void OnDetachFromPanel(DetachFromPanelEvent context) => EditorBuildSettings.sceneListChanged -= OnSceneListChanged;
 
         private void OnSceneListChanged() => UpdateChoices();
+        #endregion
 
         private static string FormatSelectedValue(int value)
         {
@@ -60,7 +62,7 @@ namespace PostEnot.EditorExtensions.Editor
             return $"{value}: {sceneName}";
         }
 
-        private static void OpunBuildProfiles()
+        private static void OpenBuildProfiles()
         {
             BuildPlayerWindow window = EditorWindow.GetWindow<BuildPlayerWindow>();
             window.Show();

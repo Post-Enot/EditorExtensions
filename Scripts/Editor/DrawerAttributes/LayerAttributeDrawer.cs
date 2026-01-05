@@ -15,8 +15,8 @@ namespace PostEnot.EditorExtensions.Editor
                 return new Label($"Use Layer with int.");
             }
             LayerField layerField = new(preferredLabel, property.intValue);
-            layerField.BindProperty(property);
             layerField.AddToClassList(BaseField<int>.alignedFieldUssClassName);
+            layerField.BindProperty(property);
             return layerField;
         }
     }

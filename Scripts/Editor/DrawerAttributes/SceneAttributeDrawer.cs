@@ -17,10 +17,15 @@ namespace PostEnot.EditorExtensions.Editor
             SceneField sceneField = new(preferredLabel);
             sceneField.AddToClassList(BaseField<int>.alignedFieldUssClassName);
             sceneField.BindProperty(property);
-            ValidatorContainer<SceneField, int> validatorContainer = new(sceneField, UpdateValidationHelpBox);
-            sceneField.ChoicedUpdated += validatorContainer.InvokeValidationRequest;
-            validatorContainer.Add(sceneField);
-            return validatorContainer;
+            SceneAttribute sceneAttribute = attribute as SceneAttribute;
+            if (sceneAttribute.ValidateInvalidIndex)
+            {
+                ValidatorContainer<SceneField, int> validatorContainer = new(sceneField, UpdateValidationHelpBox);
+                sceneField.ChoicedUpdated += validatorContainer.InvokeValidationRequest;
+                validatorContainer.Add(sceneField);
+                return validatorContainer;
+            }
+            return sceneField;
         }
 
         private static bool UpdateValidationHelpBox(SceneField sceneField, HelpBox helpBox)
