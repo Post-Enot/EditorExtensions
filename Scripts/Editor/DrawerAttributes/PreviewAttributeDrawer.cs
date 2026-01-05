@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(PreviewAttribute))]
-    internal sealed class PreviewAttributePropertyDrawer : BasePropertyDrawer<PreviewAttribute>
+    internal sealed class PreviewAttributeDrawer : BasePropertyDrawer<PreviewAttribute>
     {
         private protected override VisualElement CreateProperty(SerializedProperty property, FieldInfo fieldInfo, PreviewAttribute attribute)
         {

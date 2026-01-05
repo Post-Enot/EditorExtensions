@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(CurveAttribute))]
-    internal class CurveAttributePropertyDrawer : PropertyDrawer
+    internal class CurveAttributeDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {

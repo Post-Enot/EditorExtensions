@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(AlternatingRowsAttribute))]
-    internal sealed class AlternatingRowsAttributeDrawer : ModifyAttributeDrawer<AlternatingRowsAttribute>
+    internal sealed class AlternatingRowsDrawer : ModifyAttributeDrawer<AlternatingRowsAttribute>
     {
         private protected override void OnAttach(
             SerializedProperty property,

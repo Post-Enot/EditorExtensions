@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(TagAttribute))]
-    internal sealed class TagAttributePropertyDrawer : PropertyDrawer
+    internal sealed class TagAttributeDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {

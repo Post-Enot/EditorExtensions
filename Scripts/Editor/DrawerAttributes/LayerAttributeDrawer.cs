@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(LayerAttribute))]
-    internal sealed class LayerAttributePropertyDrawer : PropertyDrawer
+    internal sealed class LayerAttributeDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {

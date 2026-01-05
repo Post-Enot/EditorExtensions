@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(SceneAttribute))]
-    internal sealed class SceneAttributePropertyDrawer : PropertyDrawer
+    internal sealed class SceneAttributeDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {

@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(WithoutFoldoutAttribute))]
-    internal sealed class WithoutFoldoutAttributePropertyDrawer : PropertyDrawer
+    internal sealed class WithoutFoldoutAttributeDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
@@ -15,7 +15,7 @@ namespace PostEnot.EditorExtensions.Editor
             return container;
         }
 
-        private void DrawChildrenProperties(VisualElement container, SerializedProperty property)
+        private static void DrawChildrenProperties(VisualElement container, SerializedProperty property)
         {
             int depth = property.depth;
             if (!property.NextVisible(true))
