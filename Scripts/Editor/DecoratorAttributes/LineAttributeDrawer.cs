@@ -43,7 +43,7 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 lineDecorator.style.backgroundColor = color;
             }
-            DrawerUtility.ApplyDrawMode(lineAttribute.DrawMode, temp, lineDecorator);
+            UIUtility.ApplyDrawMode(lineAttribute.DrawMode, temp, lineDecorator);
         }
     }
 }

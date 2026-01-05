@@ -36,7 +36,7 @@ namespace PostEnot.EditorExtensions.Editor
             };
             button.style.marginLeft = 0;
             button.style.marginRight = 0;
-            DrawerUtility.ApplyDrawMode(buttonAttribute.DrawMode, temp, button);
+            UIUtility.ApplyDrawMode(buttonAttribute.DrawMode, temp, button);
             object instance = parentSerializedProperty switch
             {
                 null => serializedProperty.serializedObject.targetObject,

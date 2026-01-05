@@ -28,7 +28,7 @@ namespace PostEnot.EditorExtensions.Editor
         private void AfterAttach(HelpBoxAttribute helpBoxAttribute, VisualElement temp)
         {
             HelpBox helpBox = new(helpBoxAttribute.Text, helpBoxAttribute.MessageType);
-            DrawerUtility.ApplyDrawMode(helpBoxAttribute.DrawMode, temp, helpBox);
+            UIUtility.ApplyDrawMode(helpBoxAttribute.DrawMode, temp, helpBox);
         }
     }
 }
