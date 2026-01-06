@@ -1,4 +1,5 @@
 ﻿using PostEnot.Toolkits;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -6,9 +7,12 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(SceneAttribute))]
-    internal sealed class SceneAttributeDrawer : PropertyDrawer
+    internal sealed class SceneAttributeDrawer : BasePropertyDrawer<SceneAttribute>
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        private protected override VisualElement CreateProperty(
+            SerializedProperty property,
+            FieldInfo fieldInfo,
+            SceneAttribute attribute)
         {
             if (property.propertyType is not SerializedPropertyType.Integer)
             {
@@ -17,8 +21,7 @@ namespace PostEnot.EditorExtensions.Editor
             SceneField sceneField = new(preferredLabel);
             sceneField.AddToClassList(BaseField<int>.alignedFieldUssClassName);
             sceneField.BindProperty(property);
-            SceneAttribute sceneAttribute = attribute as SceneAttribute;
-            if (sceneAttribute.ValidateInvalidIndex)
+            if (attribute.ValidateInvalidIndex)
             {
                 ValidatorContainer<SceneField, int> validatorContainer = new(sceneField, UpdateValidationHelpBox);
                 sceneField.ChoicedUpdated += validatorContainer.InvokeValidationRequest;
