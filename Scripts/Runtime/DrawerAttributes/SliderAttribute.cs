@@ -4,6 +4,12 @@ namespace PostEnot.Toolkits
 {
     public sealed class SliderAttribute : PropertyAttribute
     {
+        public SliderAttribute()
+        {
+            MinX = 0.0f;
+            MaxX = 1.0f;
+        }
+
         public SliderAttribute(float min, float max)
         {
             MinX = min;
