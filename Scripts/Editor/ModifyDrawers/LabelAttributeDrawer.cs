@@ -5,12 +5,9 @@ using UnityEditor.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    [CustomPropertyDrawer(typeof(LabelAttribute))]
-    internal sealed class LabelAttributeDrawer : ModifyAttributeDrawer<LabelAttribute>
+    internal sealed class LabelAttributeDrawer : AdvancedModificatorDrawer<LabelAttribute>
     {
-        // Необходим именно AfterAttach, т.к. при установке label = string.Empty происходит изменение иерархии,
-        // а attribute.Label потенциально может быть null или string.Empty.
-        private protected override void AfterAttach(
+        internal override void ModifyProperty(
             SerializedProperty property,
             PropertyField propertyField,
             FieldInfo fieldInfo,

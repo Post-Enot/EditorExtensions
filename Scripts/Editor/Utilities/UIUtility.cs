@@ -42,6 +42,9 @@ namespace PostEnot.EditorExtensions.Editor
             }
         }
 
+        internal static VisualElement GetDecoratorContainer(PropertyField propertyField)
+            => propertyField.Q<VisualElement>(className: _decoratorDrawerContainerUss);
+
         internal static void AddToFooterDecoratorContainer(VisualElement field, VisualElement element)
         {
             PropertyField propertyField = field.GetFirstAncestorOfType<PropertyField>();

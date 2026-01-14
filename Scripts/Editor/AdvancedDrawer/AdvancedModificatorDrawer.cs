@@ -5,12 +5,14 @@ using UnityEditor.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    internal sealed class ReadOnlyAttributeDrawer : AdvancedModificatorDrawer<ReadOnlyAttribute>
+    internal abstract class AdvancedModificatorDrawer
     {
-        internal override void ModifyProperty(
+        private protected static EditorAttributesSettingsAsset Settings => EditorAttributesSettingsAsset.GetSettings();
+
+        internal abstract void ModifyProperty(
             SerializedProperty property,
             PropertyField propertyField,
             FieldInfo fieldInfo,
-            ReadOnlyAttribute attribute) => propertyField.SetEnabled(false);
+            ModifyPropertyAttribute attribute);
     }
 }

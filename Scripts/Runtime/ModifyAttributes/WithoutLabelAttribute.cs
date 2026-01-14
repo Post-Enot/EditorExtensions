@@ -1,4 +1,7 @@
 ﻿namespace PostEnot.Toolkits
 {
-    public sealed class WithoutLabelAttribute : ModifyPropertyAttribute {}
+    public sealed class WithoutLabelAttribute : LabelAttribute
+    {
+        public WithoutLabelAttribute() : base(string.Empty) {}
+    }
 }

@@ -18,6 +18,7 @@ namespace PostEnot.EditorExtensions.Editor
         [SerializeField, Label("Vector Labels")]  private StyleSheet vectorLabelsStyleSheet;
         [SerializeField, Label("Table")]          private StyleSheet tableStyleSheet;
         [SerializeField, Label("Preview")]        private StyleSheet previewStyleSheet;
+        [SerializeField, Label("MinMaxSlider")]   private StyleSheet minMaxSliderStyleSheet;
         #endregion
 
         public StyleSheet LineDecoratorStyleSheet => lineDecoratorStyleSheet;
@@ -25,6 +26,7 @@ namespace PostEnot.EditorExtensions.Editor
         public StyleSheet VectorLabelsStyleSheet => vectorLabelsStyleSheet;
         public StyleSheet TableStyleSheet => tableStyleSheet;
         public StyleSheet PreviewStyleSheet => previewStyleSheet;
+        public StyleSheet MinMaxSliderStyleSheet => minMaxSliderStyleSheet;
 
         private static EditorAttributesSettingsAsset _instance;
 

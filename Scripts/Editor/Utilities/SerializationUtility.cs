@@ -156,5 +156,18 @@ namespace PostEnot.EditorExtensions.Editor
 
             return fieldInfo;
         }
+
+        internal static void GetFieldAttributes<TAttribute>(FieldInfo field, List<TAttribute> list) where TAttribute : PropertyAttribute
+        {
+            list.Clear();
+            IEnumerable<TAttribute> customAttributes = field.GetCustomAttributes<TAttribute>(inherit: true);
+            Comparer<TAttribute> comparer = null;
+            foreach (TAttribute item in customAttributes)
+            {
+                comparer ??= Comparer<TAttribute>.Create((p1, p2) => p1.order.CompareTo(p2.order));
+                list.Add(item);
+            }
+            list?.Sort(comparer);
+        }
     }
 }

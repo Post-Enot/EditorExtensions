@@ -1,0 +1,43 @@
+.pe-min-max-slider-field {
+    flex-direction: row;
+}
+
+.pe-min-max-slider-field Label {
+}
+
+.pe-min-max-slider-field #input {
+    flex-direction: row;
+    flex-basis: auto;
+    flex-wrap: nowrap;
+    height: 100%;
+    overflow: visible;
+    flex-grow: 1;
+}
+
+.pe-min-max-slider-field #min-value-field {
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 50px;
+    margin-top: 0;
+    margin-right: 4px;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.pe-min-max-slider-field #max-value-field {
+    width: 50px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 4px;
+}
+
+.pe-min-max-slider-field #slider {
+    flex-grow: 1;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}

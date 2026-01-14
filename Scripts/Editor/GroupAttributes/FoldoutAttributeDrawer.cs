@@ -8,63 +8,44 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(FoldoutAttribute))]
-    internal sealed class FoldoutAttributeDrawer : DecoratorDrawer
+    internal sealed class FoldoutAttributeDrawer : BaseGroupDrawer<FoldoutAttribute>
     {
-        public override VisualElement CreatePropertyGUI()
+        private protected override void AfterAttach(
+            SerializedProperty property,
+            PropertyField propertyField,
+            FieldInfo fieldInfo,
+            FoldoutAttribute attribute)
         {
-            FoldoutAttribute foldoutAttribute = attribute as FoldoutAttribute;
-            VisualElement temp = new()
+            List<PropertyField> includedPropertyFields = new()
             {
-                name = "TEMP",
-                userData = foldoutAttribute.Text
+                propertyField
             };
-            temp.RegisterCallbackOnce<AttachToPanelEvent>(OnAttachToPanel);
-            return temp;
-        }
-
-        private void OnAttachToPanel(AttachToPanelEvent context)
-        {
-            VisualElement temp = (VisualElement)context.target;
-            temp.schedule.Execute(() => Draw(temp));
-        }
-
-        private void Draw(VisualElement temp)
-        {
-            string text = temp.userData as string;
-            List<PropertyField> propertyFields = new();
-            PropertyField firstPropertyField = temp.GetFirstAncestorOfType<PropertyField>();
-            propertyFields.Add(firstPropertyField);
             Foldout foldout = new()
             {
-                text = text,
+                text = attribute.Name,
             };
-            int index = firstPropertyField.parent.IndexOf(firstPropertyField);
-            firstPropertyField.parent.Insert(index, foldout);
+            int index = propertyField.parent.IndexOf(propertyField);
+            propertyField.parent.Insert(index, foldout);
             index += 2;
-            for (int i = index; i < firstPropertyField.parent.childCount; i += 1)
+            for (int i = index; i < propertyField.parent.childCount; i += 1)
             {
-                VisualElement visualElement = firstPropertyField.parent.ElementAt(i);
-                if (visualElement is PropertyField propertyField)
+                VisualElement visualElement = propertyField.parent.ElementAt(i);
+                if (visualElement is PropertyField includedPropertyField)
                 {
-                    SerializedProperty serializedProperty = SerializationUtility.GetSerializedProperty(propertyField);
-                    FieldInfo fieldInfo = SerializationUtility.GetFieldInfo(serializedProperty);
-                    EndFoldoutAttribute endFoldoutAttribute = fieldInfo.GetCustomAttribute<EndFoldoutAttribute>();
-                    if (endFoldoutAttribute != null)
+                    SerializedProperty includedSerializedProperty = SerializationUtility.GetSerializedProperty(includedPropertyField);
+                    FieldInfo includedFieldInfo = SerializationUtility.GetFieldInfo(includedSerializedProperty);
+                    if (includedFieldInfo.HasCustomAttribute<EndFoldoutAttribute>()
+                        || includedFieldInfo.HasCustomAttribute<FoldoutAttribute>())
                     {
                         break;
                     }
-                    FoldoutAttribute foldoutAttribute = fieldInfo.GetCustomAttribute<FoldoutAttribute>();
-                    if (foldoutAttribute != null)
-                    {
-                        break;
-                    }
-                    propertyFields.Add(propertyField);
+                    includedPropertyFields.Add(includedPropertyField);
                 }
             }
-            foreach (PropertyField propertyField1 in propertyFields)
+            foreach (PropertyField includedPropertyField in includedPropertyFields)
             {
-                propertyField1.RemoveFromHierarchy();
-                foldout.Add(propertyField1);
+                includedPropertyField.RemoveFromHierarchy();
+                foldout.Add(includedPropertyField);
             }
         }
     }
