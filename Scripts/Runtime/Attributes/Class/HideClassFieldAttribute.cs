@@ -1,7 +1,4 @@
-﻿using System;
-
-namespace PostEnot.Toolkits
+﻿namespace PostEnot.Toolkits
 {
-    [AttributeUsage(AttributeTargets.Struct | AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class HideClassFieldAttribute : Attribute {}
+    public sealed class HideClassFieldAttribute : ClassAttribute { }
 }
