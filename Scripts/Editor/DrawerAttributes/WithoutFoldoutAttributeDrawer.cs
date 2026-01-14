@@ -1,4 +1,5 @@
 ﻿using PostEnot.Toolkits;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -6,9 +7,12 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(WithoutFoldoutAttribute))]
-    internal sealed class WithoutFoldoutAttributeDrawer : PropertyDrawer
+    internal sealed class WithoutFoldoutAttributeDrawer : BasePropertyDrawer<WithoutFoldoutAttribute>
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        private protected override VisualElement CreateProperty(
+            SerializedProperty property,
+            FieldInfo fieldInfo,
+            WithoutFoldoutAttribute attribute)
         {
             VisualElement container = new();
             DrawChildrenProperties(container, property);

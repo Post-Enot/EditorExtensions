@@ -9,9 +9,12 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(CurveAttribute))]
-    internal class CurveAttributeDrawer : PropertyDrawer
+    internal class CurveAttributeDrawer : BasePropertyDrawer<CurveAttribute>
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        private protected override VisualElement CreateProperty(
+            SerializedProperty property,
+            FieldInfo fieldInfo,
+            CurveAttribute attribute)
         {
             if (property.propertyType is not SerializedPropertyType.AnimationCurve)
             {
@@ -19,13 +22,8 @@ namespace PostEnot.EditorExtensions.Editor
             }
             CurveField curveField = new(preferredLabel);
             curveField.BindProperty(property);
-            CurveAttribute curveAttribute = attribute as CurveAttribute;
-            curveField.ranges = Rect.MinMaxRect(
-                curveAttribute.MinX,
-                curveAttribute.MinY,
-                curveAttribute.MaxX,
-                curveAttribute.MaxY);
-            TrySetCurveColor(curveField, curveAttribute.HexColor);
+            curveField.ranges = Rect.MinMaxRect(attribute.MinX, attribute.MinY, attribute.MaxX, attribute.MaxY);
+            TrySetCurveColor(curveField, attribute.HexColor);
             curveField.AddToClassList(BaseField<AnimationCurve>.alignedFieldUssClassName);
             return curveField;
         }

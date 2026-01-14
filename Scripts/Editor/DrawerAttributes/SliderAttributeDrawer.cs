@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using PostEnot.Toolkits;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -7,30 +8,32 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomPropertyDrawer(typeof(SliderAttribute))]
-    internal sealed class SliderAttributeDrawer : PropertyDrawer
+    internal sealed class SliderAttributeDrawer : BasePropertyDrawer<SliderAttribute>
     {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        private protected override VisualElement CreateProperty(
+            SerializedProperty property,
+            FieldInfo fieldInfo,
+            SliderAttribute attribute)
         {
-            SliderAttribute sliderAttribute = attribute as SliderAttribute;
             if (property.propertyType is SerializedPropertyType.Float)
             {
-                Slider slider = new(sliderAttribute.MinX, sliderAttribute.MaxX)
+                Slider slider = new(attribute.MinX, attribute.MaxX)
                 {
                     label = preferredLabel,
                     showInputField = true
                 };
-                ApplyStyle(slider, sliderAttribute);
+                ApplyStyle(slider, attribute);
                 slider.BindProperty(property);
                 return slider;
             }
             if (property.propertyType is SerializedPropertyType.Integer)
             {
-                SliderInt slider = new((int)sliderAttribute.MinX, (int)sliderAttribute.MaxX)
+                SliderInt slider = new((int)attribute.MinX, (int)attribute.MaxX)
                 {
                     label = preferredLabel,
                     showInputField = true
                 };
-                ApplyStyle(slider, sliderAttribute);
+                ApplyStyle(slider, attribute);
                 slider.BindProperty(property);
                 return slider;
             }
