@@ -14,33 +14,27 @@
 
 Ниже подробно описаны все предоставляемые атрибуты, способы и особенности использования.
 
-## FoldoutAttribute, EndFoldoutAttribute
+## Атрибуты классов
 
-Перемещает поле атрибута, а также все поля ниже в раскрывающийся список. Перемещение происходит до следующего `FoldoutAttribute` или `EndFoldoutAttribute`. На данный момент вложенные раскрывающиеся списки не поддерживаются.
+Данные атрибуты применимы к классам, как правило, только к потомкам `UnityEngine.Object`.
 
-```csharp
-[Foldout("<b>Foldout 1")]
-[SerializeField] private int var0;
-[SerializeField] private int var1;
-[SerializeField] private int var2;
-[EndFoldout]
+### DisableInspectorAttribute
 
-[SerializeField] private int var3;
+Отключает инспектор, делая невозможным ввод данных.
 
-[Foldout("Foldout 2")]
-[SerializeField] private int var4;
-[SerializeField] private int var5;
-[SerializeField] private int var6;
+### HideInspectorAttribute
 
-[Foldout("Foldout 2")]
-[SerializeField] private int var7;
-[SerializeField] private int var8;
-[SerializeField] private int var9;
-```
-![](https://github.com/user-attachments/assets/b4b99ee2-a635-431d-b056-f5953a9a3806)
-![](https://github.com/user-attachments/assets/5b6ac336-7ac7-46d1-87be-bd9497d9fe5b)
+Полностью скрывает отображение данных в инспекторе.
 
-## WithoutFoldoutAttribute
+### HideClassFieldAttribute
+
+Скрывает служебное поле `m_Script` (в инспекторе подписано, как Script), отображающее ссылку на файл, в котором объявлен класс.
+
+## Атрибуты отображения
+
+Данные атрибуты изменяют способ отображения поля ввода в инспекторе. Они не сочетаемы друг с другом, но сочетаемы с атрибутами других типов.
+
+### WithoutFoldoutAttribute
 
 Убирает раскрывающийся список у представлений классов и структур, помеченных атрибутом `Serializable`.
 
@@ -89,7 +83,7 @@ public struct ItemCostData
 
 ![](https://github.com/user-attachments/assets/3a34a068-5224-418f-a143-3bb1769992ed)
 
-## SceneAttribute
+### SceneAttribute
 
 Превращает стандартное `int` поле в поле ввода индекса сцены: выпадающий список содержит все сцены, включённые в билд, в том числе выключенные. Кнопка рядом с выпадающим списком открывает меню Build Profiles для быстрого и удобного перехода к окну изменения сцен, включённых в билд. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
 
@@ -106,7 +100,7 @@ public struct ItemCostData
 
 ![](https://github.com/user-attachments/assets/10199bb4-fd2e-4f77-aada-b09927360db4)
 
-## CurveAttribute
+### CurveAttribute
 
 Позволяет задать область определения анимационной кривой, а также настроить цвет.
 Цвет передаётся в HEX-представлении ввиде строки: вы можете использовать одну из 157 констант, заданных в `PostEnot.Toolkits.HexColors`, идентичных пресетам цветов `UnityEngine.Color` или же задать собственный цвет. в формате `#RRGGBB` или `#RRGGBBAA`.
@@ -120,7 +114,7 @@ public struct ItemCostData
 ![](https://github.com/user-attachments/assets/9feb4c8c-c1db-4162-97b3-e67d46d50e38)
 ![](https://github.com/user-attachments/assets/6c7ef0eb-6259-4b89-90fa-7c004979bd25)
 
-## PreviewAttribute
+### PreviewAttribute
 
 Превращает стандартное поле ввода `ObjectField` в поле ввода с превью, демонстрация присвоенный полю ассет. Вы можете задать размер превью с помощью перечисления `PreviewSize`, поддерживающего четыре размера (`Small`, `Medium`, `Big`, `Large`), либо указав размер превью в пикселях самостоятельно. Стандартный размер превью - `Medium` (90px).
 
@@ -133,7 +127,7 @@ public struct ItemCostData
 ```
 ![](https://github.com/user-attachments/assets/ec5c1bf6-a829-4d16-8238-5fd621fd4dc8)
 
-## LayerAttribute
+### LayerAttribute
 
 Превращает стандартное `int` поле в поле ввода индекса слоя. На данный момент поддерживается применение атрибута только к полям типа `int`: применение к полям типа `string` на мотив `Naughty Attributes` не поддерживается.
 
@@ -143,7 +137,7 @@ public struct ItemCostData
 
 ![](https://github.com/user-attachments/assets/28d3b483-685f-4d7f-988c-5f75d45868a1)
 
-## TagAttribute
+### TagAttribute
 
 Превращает стаднартное `string` поле в поле ввода тега. Тег применим только к полю типа `string`.
 
@@ -318,3 +312,29 @@ private void Randomize() => value = UnityEngine.Random.Range(min, max);
 ```
 
 ![](https://github.com/user-attachments/assets/a353393e-df3f-4d46-b4ae-ca18702a019a)
+
+## FoldoutAttribute, EndFoldoutAttribute
+
+Перемещает поле атрибута, а также все поля ниже в раскрывающийся список. Перемещение происходит до следующего `FoldoutAttribute` или `EndFoldoutAttribute`. На данный момент вложенные раскрывающиеся списки не поддерживаются.
+
+```csharp
+[Foldout("<b>Foldout 1")]
+[SerializeField] private int var0;
+[SerializeField] private int var1;
+[SerializeField] private int var2;
+[EndFoldout]
+
+[SerializeField] private int var3;
+
+[Foldout("Foldout 2")]
+[SerializeField] private int var4;
+[SerializeField] private int var5;
+[SerializeField] private int var6;
+
+[Foldout("Foldout 2")]
+[SerializeField] private int var7;
+[SerializeField] private int var8;
+[SerializeField] private int var9;
+```
+![](https://github.com/user-attachments/assets/b4b99ee2-a635-431d-b056-f5953a9a3806)
+![](https://github.com/user-attachments/assets/5b6ac336-7ac7-46d1-87be-bd9497d9fe5b)
