@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomEditor(typeof(UnityEngine.Object), true)]
-    internal sealed class AdvancedEditor : UnityEditor.Editor
+    public class AdvancedEditor : UnityEditor.Editor
     {
         private static Dictionary<Type, AdvancedModificatorDrawer> _modificatorDrawers;
 

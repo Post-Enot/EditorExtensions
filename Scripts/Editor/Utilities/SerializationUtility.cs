@@ -70,6 +70,35 @@ namespace PostEnot.EditorExtensions.Editor
                 Type.EmptyTypes,
                 null);
 
+        internal static string GetParentPropertyPath(string propertyPath)
+        {
+            if (string.IsNullOrEmpty(propertyPath))
+            {
+                return string.Empty;
+            }
+            int lastDotIndex = propertyPath.LastIndexOf('.');
+            if (lastDotIndex == -1)
+            {
+                return string.Empty;
+            }
+            string lastPart = propertyPath[(lastDotIndex + 1)..];
+            if (lastPart.StartsWith("Array.data[", StringComparison.Ordinal))
+            {
+                int prevDotIndex = propertyPath.LastIndexOf('.', lastDotIndex - 1);
+                if (prevDotIndex == -1)
+                {
+                    return propertyPath[..lastDotIndex];
+                }
+
+                string prevPart = propertyPath.Substring(prevDotIndex + 1, lastDotIndex - prevDotIndex - 1);
+                if (prevPart == "Array")
+                {
+                    return propertyPath[..prevDotIndex];
+                }
+            }
+            return propertyPath[..lastDotIndex];
+        }
+
         internal static SerializedProperty GetSerializedProperty(PropertyField propertyField)
         {
             Type propertyFieldType = typeof(PropertyField);
