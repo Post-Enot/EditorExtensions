@@ -34,6 +34,15 @@
 
 Данные атрибуты изменяют способ отображения поля ввода в инспекторе. Они не сочетаемы друг с другом, но сочетаемы с атрибутами других типов.
 
+### AnimatorParamAttribute
+
+Превращает стандартное `int` поле в поле с выпадающим списком, позволяющее выбрать один из анимационных параметров. Требует указания ссылки на `SerializeField` поле типа `Animator`. Применение к полям типа `string` на мотив `NaughtyAttributes` не поддерживается.
+
+```csharp
+[SerializeField] private Animator animator;
+[SerializeField, AnimatorParam(nameof(animator))] private int param;
+```
+
 ### WithoutFoldoutAttribute
 
 Убирает раскрывающийся список у представлений классов и структур, помеченных атрибутом `Serializable`.
