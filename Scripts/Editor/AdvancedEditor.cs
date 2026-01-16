@@ -11,8 +11,6 @@ namespace PostEnot.EditorExtensions.Editor
     [CustomEditor(typeof(UnityEngine.Object), true)]
     public class AdvancedEditor : UnityEditor.Editor
     {
-        private static Dictionary<Type, AdvancedModificatorDrawer> _modificatorDrawers;
-
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement root = new();
@@ -43,54 +41,7 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 InspectorElement.FillDefaultInspector(root, serializedObject, this);
             }
-            List<PropertyField> propertyFields = new();
-            foreach (VisualElement child in root.Children())
-            {
-                if ((child is PropertyField propertyField) && (propertyField.bindingPath != "m_Script"))
-                {
-                    propertyFields.Add(propertyField);
-                }
-            }
-            ModificatorPass(serializedObject, propertyFields);
             return root;
-        }
-
-        private static void InitModificatorDrawers() =>
-            _modificatorDrawers ??= new Dictionary<Type, AdvancedModificatorDrawer>
-            {
-                { typeof(ReadOnlyAttribute), new ReadOnlyAttributeDrawer() },
-                { typeof(LabelAttribute), new LabelAttributeDrawer() }
-            };
-
-        private static AdvancedModificatorDrawer GetModificatorDrawerFor(Type attributeType)
-        {
-            InitModificatorDrawers();
-            while (attributeType != null)
-            {
-                if (_modificatorDrawers.TryGetValue(attributeType, out AdvancedModificatorDrawer drawer))
-                {
-                    return drawer;
-                }
-                attributeType = attributeType.BaseType;
-            }
-            return null;
-        }
-
-        private static void ModificatorPass(SerializedObject serializedObject, IReadOnlyList<PropertyField> propertyFields)
-        {
-            List<ModifyPropertyAttribute> attributes = new();
-            foreach (PropertyField propertyField in propertyFields)
-            {
-                SerializedProperty property = serializedObject.FindProperty(propertyField.bindingPath);
-                FieldInfo fieldInfo = SerializationUtility.GetFieldInfo(property);
-                SerializationUtility.GetFieldAttributes(fieldInfo, attributes);
-                foreach (ModifyPropertyAttribute attribute in attributes)
-                {
-                    Type attributeType = attribute.GetType();
-                    AdvancedModificatorDrawer drawer = GetModificatorDrawerFor(attributeType);
-                    drawer?.ModifyProperty(property, propertyField, fieldInfo, attribute);
-                }
-            }
         }
     }
 }

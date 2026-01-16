@@ -5,9 +5,10 @@ using UnityEditor.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    internal sealed class ReadOnlyAttributeDrawer : AdvancedModificatorDrawer<ReadOnlyAttribute>
+    [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
+    internal sealed class ReadOnlyAttributeDrawer : ModifyAttributeDrawer<ReadOnlyAttribute>
     {
-        internal override void ModifyProperty(
+        private protected override void OnAttach(
             SerializedProperty property,
             PropertyField propertyField,
             FieldInfo fieldInfo,
