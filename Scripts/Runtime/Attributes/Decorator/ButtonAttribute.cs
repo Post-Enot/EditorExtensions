@@ -2,6 +2,12 @@
 {
     public sealed class ButtonAttribute : DecoratorPropertyAttribute
     {
+        public ButtonAttribute(string methodName, AttributeDrawMode drawMode = AttributeDrawMode.Before) : base(drawMode)
+        {
+            Text = null;
+            MethodName = methodName;
+        }
+
         public ButtonAttribute(string text, string methodName, AttributeDrawMode drawMode = AttributeDrawMode.Before) : base(drawMode)
         {
             Text = text;

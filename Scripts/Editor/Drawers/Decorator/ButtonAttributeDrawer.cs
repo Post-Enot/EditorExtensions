@@ -24,30 +24,35 @@ namespace PostEnot.EditorExtensions.Editor
         private void OnAttachToPanel(AttachToPanelEvent context)
         {
             VisualElement temp = context.target as VisualElement;
+            ButtonAttribute attribute = temp.userData as ButtonAttribute;
+            temp.schedule.Execute(() => OnAfterAttach(attribute, temp));
+        }
+
+        private void OnAfterAttach(ButtonAttribute attribute, VisualElement temp)
+        {
             PropertyField propertyField = temp.GetFirstAncestorOfType<PropertyField>();
             SerializedProperty serializedProperty = SerializationUtility.GetSerializedProperty(propertyField);
+            FieldInfo fieldInfo = SerializationUtility.GetFieldInfo(serializedProperty);
             SerializedProperty parentSerializedProperty = SerializationUtility.GetParentProperty(serializedProperty);
-            ButtonAttribute buttonAttribute = temp.userData as ButtonAttribute;
-            string methodName = buttonAttribute.MethodName;
+            string methodName = attribute.MethodName;
 
             Button button = new()
             {
-                text = buttonAttribute.Text,
+                text = attribute.Text ?? ObjectNames.NicifyVariableName(attribute.MethodName),
             };
             button.style.marginLeft = 0;
             button.style.marginRight = 0;
-            UIUtility.ApplyDrawMode(buttonAttribute.DrawMode, temp, button);
             object instance = parentSerializedProperty switch
             {
                 null => serializedProperty.serializedObject.targetObject,
-                { propertyType: SerializedPropertyType.ExposedReference or SerializedPropertyType.ObjectReference } => parentSerializedProperty.objectReferenceValue,
+                { propertyType: SerializedPropertyType.ExposedReference or SerializedPropertyType.ObjectReference }
+                    => parentSerializedProperty.objectReferenceValue,
                 { propertyType: SerializedPropertyType.ManagedReference } => parentSerializedProperty.managedReferenceValue,
                 _ => null
             };
             if (instance != null)
             {
-                Type instanceType = instance.GetType();
-                MethodInfo methodInfo = SerializationUtility.FindMethod(instanceType, methodName);
+                MethodInfo methodInfo = SerializationUtility.FindMethod(fieldInfo.DeclaringType, methodName);
                 button.clickable = new Clickable(() =>
                 {
                     methodInfo.Invoke(instance, null);
@@ -67,6 +72,8 @@ namespace PostEnot.EditorExtensions.Editor
                     parentSerializedProperty.serializedObject.ApplyModifiedProperties();
                 });
             }
+            UIUtility.ApplyDrawMode(attribute.DrawMode, temp, button);
+            temp.RegisterCallbackOnce<DetachFromPanelEvent>(_ => button.RemoveFromHierarchy());
         }
     }
 }
