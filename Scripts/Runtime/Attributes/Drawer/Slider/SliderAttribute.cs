@@ -2,7 +2,7 @@
 
 namespace PostEnot.Toolkits
 {
-    public sealed class SliderAttribute : PropertyAttribute
+    public class SliderAttribute : PropertyAttribute
     {
         public SliderAttribute()
         {

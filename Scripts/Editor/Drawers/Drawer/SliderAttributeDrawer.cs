@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    [CustomPropertyDrawer(typeof(SliderAttribute))]
+    [CustomPropertyDrawer(typeof(SliderAttribute), true)]
     internal sealed class SliderAttributeDrawer : BasePropertyDrawer<SliderAttribute>
     {
         private protected override VisualElement CreateProperty(
