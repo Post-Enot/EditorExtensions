@@ -5,7 +5,7 @@ using UnityEditor.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    [CustomPropertyDrawer(typeof(LabelAttribute))]
+    [CustomPropertyDrawer(typeof(LabelAttribute), true)]
     internal sealed class LabelAttributeDrawer : ModifyAttributeDrawer<LabelAttribute>
     {
         private protected override void AfterAttach(
