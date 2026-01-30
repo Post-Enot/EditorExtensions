@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 namespace PostEnot.EditorExtensions.Editor
 {
     [CustomEditor(typeof(UnityEngine.Object), true)]
+    [CanEditMultipleObjects]
     public class AdvancedEditor : UnityEditor.Editor
     {
         public override VisualElement CreateInspectorGUI()
