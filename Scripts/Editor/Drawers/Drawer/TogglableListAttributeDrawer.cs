@@ -28,7 +28,8 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 container = new Foldout()
                 {
-                    text = attribute.Foldout
+                    text = attribute.Foldout,
+                    value = false
                 };
             }
             ToggleButtonGroup toggleButtonGroup = new()
@@ -52,7 +53,7 @@ namespace PostEnot.EditorExtensions.Editor
                 property.InsertArrayElementAtIndex(0);
                 property.serializedObject.ApplyModifiedPropertiesWithoutUndo();
             }
-            SerializedProperty elementProperty = property.GetArrayElementAtIndex(property.arraySize - 1);
+            SerializedProperty elementProperty = property.GetArrayElementAtIndex(0);
             propertyField.BindProperty(elementProperty);
             container.Add(toggleButtonGroup);
             container.Add(propertyField);

@@ -18,7 +18,7 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 return new Label("Use Table with collections.");
             }
-            Type elementType = SerializationUtility.GetElementTypeOfSerializedCollection(fieldInfo.FieldType);
+            Type elementType = SerializationUtility.GetElementType(fieldInfo.FieldType);
             List<FieldInfo> elementFieldInfos = GetSerializableFieldsFromCollectionElement(elementType);
             MultiColumnListView multiColumnListView = new()
             {
