@@ -9,6 +9,26 @@ namespace PostEnot.EditorExtensions.Editor
 {
     internal static class SerializationUtility
     {
+        internal static void AddArrayElements(SerializedProperty property, IEnumerable<Component> components)
+        {
+            int index = property.arraySize;
+            foreach (Component component in components)
+            {
+                property.InsertArrayElementAtIndex(index);
+                SerializedProperty elementProperty = property.GetArrayElementAtIndex(index);
+                elementProperty.objectReferenceValue = component;
+                index += 1;
+            }
+        }
+
+        internal static void AddArrayElement(SerializedProperty property, Component component)
+        {
+            int index = property.arraySize;
+            property.InsertArrayElementAtIndex(index);
+            SerializedProperty elementProperty = property.GetArrayElementAtIndex(index);
+            elementProperty.objectReferenceValue = component;
+        }
+
         internal static int GetArrayIndexFromPath(ReadOnlySpan<char> propertyPath)
         {
             if (propertyPath.IsEmpty)
@@ -16,7 +36,8 @@ namespace PostEnot.EditorExtensions.Editor
                 return -1;
             }
             int lastIndex = propertyPath.Length - 1;
-            if (propertyPath[lastIndex] != ']')
+            char lastChar = propertyPath[lastIndex];
+            if (lastChar != ']')
             {
                 return -1;
             }
@@ -43,23 +64,12 @@ namespace PostEnot.EditorExtensions.Editor
             return -1;
         }
 
-        internal static Type GetElementTypeOfSerializedCollection(Type type)
-        {
-            if (type.IsArray)
-            {
-                return type.GetElementType();
-            }
-            Type genericTypeDefinition = type.GetGenericTypeDefinition();
-            if (genericTypeDefinition == typeof(List<>))
-            {
-                Type[] genericTypes = type.GetGenericArguments();
-                return genericTypes[0];
-            }
-            return null;
-        }
+        internal static Action MethodInfoToDelegate(MethodInfo methodInfo, object instance = null)
+            => instance == null
+                ? methodInfo.CreateDelegate(typeof(Action)) as Action
+                : methodInfo.CreateDelegate(typeof(Action), instance) as Action;
 
-        internal static MethodInfo FindMethod(Type type, string methodName)
-            => type.GetMethod(
+        internal static MethodInfo FindMethod(Type type, string methodName) => type.GetMethod(
                 methodName,
                 BindingFlags.Public
                 | BindingFlags.NonPublic
@@ -121,14 +131,24 @@ namespace PostEnot.EditorExtensions.Editor
             return property.serializedObject.FindProperty(parentPath);
         }
 
+        internal static Type GetElementType(Type type)
+        {
+            if (type.IsArray)
+            {
+                return type.GetElementType();
+            }
+            Type genericTypeDefinition = type.GetGenericTypeDefinition();
+            if (genericTypeDefinition == typeof(List<>))
+            {
+                Type[] genericTypes = type.GetGenericArguments();
+                return genericTypes[0];
+            }
+            return null;
+        }
+
         internal static FieldInfo GetFieldInfo(SerializedProperty property)
         {
-            const BindingFlags bindingFlags = BindingFlags.Public
-                | BindingFlags.NonPublic
-                | BindingFlags.Instance
-                | BindingFlags.FlattenHierarchy;
             Type targetType = property.serializedObject.targetObject.GetType();
-            // Разбираем путь свойства (учитываем массивы и вложенные объекты)
             string[] pathParts = property.propertyPath.Split('.');
             FieldInfo fieldInfo = null;
             Type currentType = targetType;
@@ -136,67 +156,36 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 if (part == "Array")
                 {
-                    // Пропускаем части пути, связанные с массивами
                     continue;
                 }
                 if (part.StartsWith("data["))
                 {
-                    // Если это элемент массива, получаем тип элемента
-                    if (currentType.IsArray)
-                    {
-                        currentType = currentType.GetElementType();
-                    }
-                    else if (currentType.IsGenericType && currentType.GetGenericTypeDefinition() == typeof(List<>))
-                    {
-                        currentType = currentType.GetGenericArguments()[0];
-                    }
+                    currentType = GetElementType(currentType);
                     continue;
                 }
-
-                // Ищем поле в текущем типе
-                fieldInfo = currentType.GetField(part, bindingFlags);
+                fieldInfo = currentType.GetField(
+                    part,
+                    BindingFlags.Public
+                    | BindingFlags.NonPublic
+                    | BindingFlags.Instance
+                    | BindingFlags.FlattenHierarchy);
                 if (fieldInfo == null)
                 {
-                    // Если не нашли, проверяем базовые классы
                     Type baseType = currentType.BaseType;
-                    while (baseType != null && fieldInfo == null)
+                    while ((baseType != null) && (fieldInfo == null))
                     {
                         fieldInfo = baseType.GetField(part, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
                         baseType = baseType.BaseType;
                     }
-
                     if (fieldInfo == null)
                     {
                         Debug.LogError($"Field '{part}' not found in type '{currentType}'");
                         return null;
                     }
                 }
-
-                // Обновляем текущий тип для следующей итерации
                 currentType = fieldInfo.FieldType;
-
-                // Обработка Nullable типов
-                if (currentType.IsGenericType &&
-                    currentType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    currentType = currentType.GetGenericArguments()[0];
-                }
             }
-
             return fieldInfo;
-        }
-
-        internal static void GetFieldAttributes<TAttribute>(FieldInfo field, List<TAttribute> list) where TAttribute : PropertyAttribute
-        {
-            list.Clear();
-            IEnumerable<TAttribute> customAttributes = field.GetCustomAttributes<TAttribute>(inherit: true);
-            Comparer<TAttribute> comparer = null;
-            foreach (TAttribute item in customAttributes)
-            {
-                comparer ??= Comparer<TAttribute>.Create((p1, p2) => p1.order.CompareTo(p2.order));
-                list.Add(item);
-            }
-            list?.Sort(comparer);
         }
     }
 }
