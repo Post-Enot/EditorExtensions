@@ -53,9 +53,10 @@ namespace PostEnot.EditorExtensions.Editor
             if (instance != null)
             {
                 MethodInfo methodInfo = SerializationUtility.FindMethod(fieldInfo.DeclaringType, methodName);
+                Action action = SerializationUtility.MethodInfoToDelegate(methodInfo, instance);
                 button.clickable = new Clickable(() =>
                 {
-                    methodInfo.Invoke(instance, null);
+                    action?.Invoke();
                     serializedProperty.serializedObject.ApplyModifiedProperties();
                 });
             }
