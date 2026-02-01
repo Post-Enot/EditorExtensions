@@ -3,15 +3,15 @@ using System.Reflection;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    internal static class FieldInfoExtension
+    internal static class CustomAttributeExtensions
     {
-        internal static bool HasCustomAttribute<T>(this FieldInfo self) where T : Attribute
+        internal static bool HasCustomAttribute<T>(this MemberInfo self) where T : Attribute
         {
             T attribute = self.GetCustomAttribute<T>();
             return attribute != null;
         }
 
-        internal static bool TryGetCustomAttribute<T>(this FieldInfo self, out T attribute) where T : Attribute
+        internal static bool TryGetCustomAttribute<T>(this MemberInfo self, out T attribute) where T : Attribute
         {
             attribute = self.GetCustomAttribute<T>();
             return attribute != null;

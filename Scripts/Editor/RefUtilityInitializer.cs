@@ -20,21 +20,22 @@ namespace PostEnot.EditorExtensions.Editor
                 throw new ArgumentNullException(nameof(monoBehaviour));
             }
             SerializedObject serializedObject = new(monoBehaviour);
-            SerializedProperty iterator = serializedObject.GetIterator();
+            SerializedProperty property = serializedObject.GetIterator();
             List<Component> buffer = new();
-            while (iterator.NextVisible(true))
+            while (property.NextVisible(true))
             {
-                if (iterator.propertyPath == "m_Script")
+                if (property.propertyPath == SerializationUtility.mScriptField)
                 {
                     continue;
                 }
-                if (iterator.propertyType is not SerializedPropertyType.ObjectReference && !iterator.isArray)
+                if (property.propertyType is not SerializedPropertyType.ObjectReference
+                    && !SerializationUtility.IsArrayNotString(property))
                 {
                     continue;
                 }
-                FieldInfo fieldInfo = SerializationUtility.GetFieldInfo(iterator);
+                FieldInfo fieldInfo = SerializationUtility.GetFieldInfo(property);
                 Type fieldType = fieldInfo.FieldType;
-                if (iterator.isArray)
+                if (property.isArray)
                 {
                     Type elementType = SerializationUtility.GetElementType(fieldType);
                     if ((elementType == null) || !typeof(Component).IsAssignableFrom(elementType))
@@ -47,13 +48,13 @@ namespace PostEnot.EditorExtensions.Editor
                 {
                     continue;
                 }
-                if (TryAssignSelf(monoBehaviour.gameObject, iterator, fieldInfo, fieldType, buffer)
-                    || TryAssignChildren(monoBehaviour.gameObject, iterator, fieldInfo, fieldType)
-                    || TryAssignParent(monoBehaviour.gameObject, iterator, fieldInfo, fieldType)
-                    || TryAssignHierarchy(monoBehaviour.gameObject, iterator, fieldInfo, fieldType)
-                    || TryAssignChildrenOnly(monoBehaviour.gameObject, iterator, fieldInfo, fieldType)
-                    || TryAssignParentOnly(monoBehaviour.gameObject, iterator, fieldInfo, fieldType)
-                    || TryAssignHierarchyOnly(monoBehaviour.gameObject, iterator, fieldInfo, fieldType))
+                if (TryAssignSelf(monoBehaviour.gameObject, property, fieldInfo, fieldType, buffer)
+                    || TryAssignChildren(monoBehaviour.gameObject, property, fieldInfo, fieldType)
+                    || TryAssignParent(monoBehaviour.gameObject, property, fieldInfo, fieldType)
+                    || TryAssignHierarchy(monoBehaviour.gameObject, property, fieldInfo, fieldType)
+                    || TryAssignChildrenOnly(monoBehaviour.gameObject, property, fieldInfo, fieldType)
+                    || TryAssignParentOnly(monoBehaviour.gameObject, property, fieldInfo, fieldType)
+                    || TryAssignHierarchyOnly(monoBehaviour.gameObject, property, fieldInfo, fieldType))
                 {
                     continue;
                 }
@@ -67,8 +68,7 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             Type fieldType)
         {
-            GetInHierarchyOnlyAttribute attribute = fieldInfo.GetCustomAttribute<GetInHierarchyOnlyAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.TryGetCustomAttribute(out GetInHierarchyOnlyAttribute attribute))
             {
                 return false;
             }
@@ -98,8 +98,7 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             Type fieldType)
         {
-            GetInParentOnlyAttribute attribute = fieldInfo.GetCustomAttribute<GetInParentOnlyAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.TryGetCustomAttribute(out GetInParentOnlyAttribute attribute))
             {
                 return false;
             }
@@ -122,8 +121,7 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             Type fieldType)
         {
-            GetInChildrenOnlyAttribute attribute = fieldInfo.GetCustomAttribute<GetInChildrenOnlyAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.TryGetCustomAttribute(out GetInChildrenOnlyAttribute attribute))
             {
                 return false;
             }
@@ -146,8 +144,7 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             Type fieldType)
         {
-            GetInHierarchyAttribute attribute = fieldInfo.GetCustomAttribute<GetInHierarchyAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.TryGetCustomAttribute(out GetInHierarchyAttribute attribute))
             {
                 return false;
             }
@@ -172,8 +169,7 @@ namespace PostEnot.EditorExtensions.Editor
 
         private static bool TryAssignParent(GameObject gameObject, SerializedProperty property, FieldInfo fieldInfo, Type fieldType)
         {
-            GetInParentAttribute attribute = fieldInfo.GetCustomAttribute<GetInParentAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.TryGetCustomAttribute(out GetInParentAttribute attribute))
             {
                 return false;
             }
@@ -191,8 +187,7 @@ namespace PostEnot.EditorExtensions.Editor
 
         private static bool TryAssignChildren(GameObject gameObject, SerializedProperty property, FieldInfo fieldInfo, Type fieldType)
         {
-            GetInChildrenAttribute attribute = fieldInfo.GetCustomAttribute<GetInChildrenAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.TryGetCustomAttribute(out GetInChildrenAttribute attribute))
             {
                 return false;
             }
@@ -215,8 +210,7 @@ namespace PostEnot.EditorExtensions.Editor
             Type fieldType,
             List<Component> buffer)
         {
-            GetSelfAttribute attribute = fieldInfo.GetCustomAttribute<GetSelfAttribute>();
-            if (attribute == null)
+            if (!fieldInfo.HasCustomAttribute<GetSelfAttribute>())
             {
                 return false;
             }
@@ -245,10 +239,7 @@ namespace PostEnot.EditorExtensions.Editor
             return false;
         }
 
-        private static void InsertAllInsteadSelf(
-            GameObject gameObject,
-            SerializedProperty property,
-            IEnumerable<Component> components)
+        private static void InsertAllInsteadSelf(GameObject gameObject, SerializedProperty property, IEnumerable<Component> components)
         {
             foreach (Component component in components)
             {

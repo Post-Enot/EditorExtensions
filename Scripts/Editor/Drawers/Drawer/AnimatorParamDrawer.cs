@@ -1,4 +1,5 @@
 ﻿using PostEnot.Toolkits;
+using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -19,10 +20,10 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 return new Label($"Use AnimatorParam with int.");
             }
-            string parentPath = SerializationUtility.GetParentPropertyPath(property.propertyPath);
-            string animatorPropertyPath = string.IsNullOrEmpty(parentPath)
+            ReadOnlySpan<char> parentPath = SerializationUtility.GetParentPropertyPath(property.propertyPath);
+            string animatorPropertyPath = parentPath.IsEmpty
                 ? attribute.AnimatorPropertyPath
-                : $"{parentPath}.{attribute.AnimatorPropertyPath}";
+                : $"{parentPath.ToString()}.{attribute.AnimatorPropertyPath}";
             SerializedProperty animatorProperty = property.serializedObject.FindProperty(animatorPropertyPath);
             if ((animatorProperty == null)
                 || (animatorProperty.propertyType is not SerializedPropertyType.ObjectReference)

@@ -9,6 +9,11 @@ namespace PostEnot.EditorExtensions.Editor
 {
     internal static class SerializationUtility
     {
+        internal const string mScriptField = "m_Script";
+
+        internal static bool IsArrayNotString(SerializedProperty property)
+            => property.isArray && property.propertyType is not SerializedPropertyType.String;
+
         internal static void AddArrayElements(SerializedProperty property, IEnumerable<Component> components)
         {
             int index = property.arraySize;
@@ -80,18 +85,14 @@ namespace PostEnot.EditorExtensions.Editor
                 Type.EmptyTypes,
                 null);
 
-        internal static string GetParentPropertyPath(string propertyPath)
+        internal static ReadOnlySpan<char> GetParentPropertyPath(ReadOnlySpan<char> propertyPath)
         {
-            if (string.IsNullOrEmpty(propertyPath))
-            {
-                return string.Empty;
-            }
             int lastDotIndex = propertyPath.LastIndexOf('.');
             if (lastDotIndex == -1)
             {
                 return string.Empty;
             }
-            string lastPart = propertyPath[(lastDotIndex + 1)..];
+            ReadOnlySpan<char> lastPart = propertyPath[(lastDotIndex + 1)..];
             if (lastPart.StartsWith("Array.data[", StringComparison.Ordinal))
             {
                 int prevDotIndex = propertyPath.LastIndexOf('.', lastDotIndex - 1);
@@ -99,8 +100,7 @@ namespace PostEnot.EditorExtensions.Editor
                 {
                     return propertyPath[..lastDotIndex];
                 }
-
-                string prevPart = propertyPath.Substring(prevDotIndex + 1, lastDotIndex - prevDotIndex - 1);
+                ReadOnlySpan<char> prevPart = propertyPath.Slice(prevDotIndex + 1, lastDotIndex - prevDotIndex - 1);
                 if (prevPart == "Array")
                 {
                     return propertyPath[..prevDotIndex];
@@ -112,9 +112,7 @@ namespace PostEnot.EditorExtensions.Editor
         internal static SerializedProperty GetSerializedProperty(PropertyField propertyField)
         {
             Type propertyFieldType = typeof(PropertyField);
-            FieldInfo typeFieldInfo = propertyFieldType.GetField(
-                "m_SerializedProperty",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo typeFieldInfo = propertyFieldType.GetField("m_SerializedProperty", BindingFlags.NonPublic | BindingFlags.Instance);
             object serializedPropertyObject = typeFieldInfo.GetValue(propertyField);
             return serializedPropertyObject as SerializedProperty;
         }

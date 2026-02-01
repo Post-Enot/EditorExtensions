@@ -1,7 +1,5 @@
 ﻿using PostEnot.Toolkits;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -16,33 +14,25 @@ namespace PostEnot.EditorExtensions.Editor
         {
             VisualElement root = new();
             Type targetType = serializedObject.targetObject.GetType();
-            IEnumerable<Attribute> classAttributes = targetType.GetCustomAttributes<Attribute>();
-            bool containsHideScriptAttribute = false;
-            foreach (Attribute classAttribute in classAttributes)
+            if (targetType.HasCustomAttribute<HideInspectorAttribute>())
             {
-                if (classAttribute is DisableInspectorAttribute)
-                {
-                    root.SetEnabled(false);
-                }
-                else if (classAttribute is HideInspectorAttribute)
-                {
-                    return new VisualElement();
-                }
-                else if (classAttribute is HideClassFieldAttribute)
-                {
-                    containsHideScriptAttribute = true;
-                }
+                return new VisualElement();
             }
-
-            if (containsHideScriptAttribute)
+            if (targetType.HasCustomAttribute<DisableInspectorAttribute>())
             {
-                InspectorElement.FillDefaultInspector(root, serializedObject, this, "m_Script");
+                root.SetEnabled(false);
             }
-            else
-            {
-                InspectorElement.FillDefaultInspector(root, serializedObject, this);
-            }
+            string[] propertiesToExclude =
+                targetType.HasCustomAttribute<HideClassFieldAttribute>()
+                ? new string[1]
+                {
+                    SerializationUtility.mScriptField
+                }
+                : Array.Empty<string>();
+            InspectorElement.FillDefaultInspector(root, serializedObject, this, propertiesToExclude);
             return root;
         }
+
+        protected override bool ShouldHideOpenButton() => target.GetType().HasCustomAttribute<HideClassFieldAttribute>();
     }
 }
