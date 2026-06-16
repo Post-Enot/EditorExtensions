@@ -127,6 +127,7 @@ namespace PostEnot.EditorExtensions.Editor
             }
             if (property.isArray)
             {
+                property.ClearArray();
                 Component[] components = gameObject.GetComponentsInChildren(fieldType, attribute.IncludeInactive);
                 InsertAllInsteadSelf(gameObject, property, components);
             }
@@ -150,6 +151,7 @@ namespace PostEnot.EditorExtensions.Editor
             }
             if (property.isArray)
             {
+                property.ClearArray();
                 Component[] components = gameObject.GetComponentsInChildren(fieldType, attribute.IncludeInactive);
                 SerializationUtility.AddArrayElements(property, components);
                 components = gameObject.GetComponentsInParent(fieldType, attribute.IncludeInactive);
@@ -175,6 +177,7 @@ namespace PostEnot.EditorExtensions.Editor
             }
             if (property.isArray)
             {
+                property.ClearArray();
                 Component[] components = gameObject.GetComponentsInParent(fieldType, attribute.IncludeInactive);
                 SerializationUtility.AddArrayElements(property, components);
             }
@@ -193,6 +196,7 @@ namespace PostEnot.EditorExtensions.Editor
             }
             if (property.isArray)
             {
+                property.ClearArray();
                 Component[] components = gameObject.GetComponentsInChildren(fieldType, attribute.IncludeInactive);
                 SerializationUtility.AddArrayElements(property, components);
             }
@@ -216,6 +220,7 @@ namespace PostEnot.EditorExtensions.Editor
             }
             if (property.isArray)
             {
+                property.ClearArray();
                 gameObject.GetComponents(fieldType, buffer);
                 SerializationUtility.AddArrayElements(property, buffer);
             }

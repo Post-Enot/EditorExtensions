@@ -25,13 +25,16 @@ namespace PostEnot.EditorExtensions.Editor
                 ? attribute.AnimatorPropertyPath
                 : $"{parentPath.ToString()}.{attribute.AnimatorPropertyPath}";
             SerializedProperty animatorProperty = property.serializedObject.FindProperty(animatorPropertyPath);
-            if ((animatorProperty == null)
-                || (animatorProperty.propertyType is not SerializedPropertyType.ObjectReference)
-                || (animatorProperty.objectReferenceValue is not Animator animator))
+            if ((animatorProperty == null) || (animatorProperty.propertyType is not SerializedPropertyType.ObjectReference))
             {
                 return AnimatorNotFoundLabel();
             }
-            AnimatorParamField animatorParamField = new(preferredLabel, animator);
+            FieldInfo animatorFieldInfo = SerializationUtility.GetFieldInfo(animatorProperty);
+            if (animatorFieldInfo.FieldType != typeof(Animator))
+            {
+                return AnimatorNotFoundLabel();
+            }
+            AnimatorParamField animatorParamField = new(preferredLabel, animatorProperty);
             animatorParamField.AddToClassList(BaseField<int>.alignedFieldUssClassName);
             animatorParamField.BindProperty(property);
             return animatorParamField;

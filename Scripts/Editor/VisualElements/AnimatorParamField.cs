@@ -1,38 +1,63 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 namespace PostEnot.EditorExtensions.Editor
 {
     internal sealed class AnimatorParamField : AdvancedPopupField<int>
     {
-        public AnimatorParamField(string label, Animator animator) : base(label)
+        public AnimatorParamField(string label, SerializedProperty animatorProperty) : base(label)
         {
-            _animator = animator;
+            _animatorProperty = animatorProperty;
             formatListItemCallback = FormatListItem;
             formatSelectedValueCallback = FormatSelectedValue;
+            this.TrackPropertyValue(_animatorProperty, OnAnimatorPropertyValueChanged);
+            UpdateEnabling();
         }
 
-        private readonly Animator _animator;
+        private readonly SerializedProperty _animatorProperty;
 
         private protected override void OnCreateMenu() => UpdateChoices();
 
+        private bool TryGetAnimator(out Animator result)
+        {
+            if (_animatorProperty.objectReferenceValue is Animator animator)
+            {
+                result = animator;
+                return true;
+            }
+            result = null;
+            return false;
+        }
+
         private void UpdateChoices()
         {
-            List<int> choices = new();
-            for (int i = 0; i < _animator.parameterCount; i += 1)
+            if (TryGetAnimator(out Animator animator))
             {
-                choices.Add(_animator.parameters[i].nameHash);
+                List<int> choices = new();
+                for (int i = 0; i < animator.parameterCount; i += 1)
+                {
+                    choices.Add(animator.parameters[i].nameHash);
+                }
+                this.choices = choices;
             }
-            this.choices = choices;
+            else
+            {
+                choices = new List<int>();
+            }
         }
 
         private string FormatSelectedValue(int value)
         {
-            foreach (AnimatorControllerParameter param in _animator.parameters)
+            if (TryGetAnimator(out Animator animator))
             {
-                if (param.nameHash == value)
+                foreach (AnimatorControllerParameter param in animator.parameters)
                 {
-                    return param.name;
+                    if (param.nameHash == value)
+                    {
+                        return param.name;
+                    }
                 }
             }
             return string.Empty;
@@ -40,14 +65,25 @@ namespace PostEnot.EditorExtensions.Editor
 
         private string FormatListItem(int value)
         {
-            foreach (AnimatorControllerParameter param in _animator.parameters)
+            if (TryGetAnimator(out Animator animator))
             {
-                if (param.nameHash == value)
+                foreach (AnimatorControllerParameter param in animator.parameters)
                 {
-                    return param.name;
+                    if (param.nameHash == value)
+                    {
+                        return param.name;
+                    }
                 }
             }
             return string.Empty;
+        }
+
+        private void UpdateEnabling() => enabledSelf = TryGetAnimator(out _);
+
+        private void OnAnimatorPropertyValueChanged(SerializedProperty property)
+        {
+            MarkDirtyRepaint();
+            UpdateEnabling();
         }
     }
 }
