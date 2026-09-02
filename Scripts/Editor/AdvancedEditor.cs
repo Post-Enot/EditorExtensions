@@ -12,27 +12,51 @@ namespace PostEnot.EditorExtensions.Editor
     {
         public override VisualElement CreateInspectorGUI()
         {
-            VisualElement root = new();
-            Type targetType = serializedObject.targetObject.GetType();
+            VisualElement container = new();
+            Type targetType = GetTargetType();
+            if (targetType == null)
+            {
+                return container;
+            }
             if (targetType.HasCustomAttribute<HideInspectorAttribute>())
             {
-                return new VisualElement();
+                return container;
             }
-            if (targetType.HasCustomAttribute<DisableInspectorAttribute>())
-            {
-                root.SetEnabled(false);
-            }
-            string[] propertiesToExclude =
-                targetType.HasCustomAttribute<HideClassFieldAttribute>()
+            string[] propertiesToExclude = targetType.HasCustomAttribute<HideClassFieldAttribute>()
                 ? new string[1]
                 {
                     SerializationUtility.mScriptField
                 }
                 : Array.Empty<string>();
-            InspectorElement.FillDefaultInspector(root, serializedObject, this, propertiesToExclude);
-            return root;
+            InspectorElement.FillDefaultInspector(container, serializedObject, this, propertiesToExclude);
+            if (targetType.HasCustomAttribute<DisableInspectorAttribute>())
+            {
+                container.SetEnabled(false);
+            }
+            return container;
         }
 
-        protected override bool ShouldHideOpenButton() => target.GetType().HasCustomAttribute<HideClassFieldAttribute>();
+        protected override bool ShouldHideOpenButton()
+        {
+            Type targetType = GetTargetType();
+            if (targetType == null)
+            {
+                return false;
+            }
+            return targetType.HasCustomAttribute<HideOpenButtonAttribute>();
+        }
+
+        private Type GetTargetType()
+        {
+            if (serializedObject == null)
+            {
+                return null;
+            }
+            if (serializedObject.targetObject == null)
+            {
+                return null;
+            }
+            return serializedObject.targetObject.GetType();
+        }
     }
 }
