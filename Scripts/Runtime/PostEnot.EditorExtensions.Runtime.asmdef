@@ -1,3 +1,14 @@
 {
-	"name": "PostEnot.EditorExtensions.Runtime"
+    "name": "PostEnot.EditorExtensions.Runtime",
+    "rootNamespace": "PostEnot.Toolkits",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

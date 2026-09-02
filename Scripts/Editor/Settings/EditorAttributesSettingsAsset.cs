@@ -1,6 +1,8 @@
 ﻿using PostEnot.Toolkits;
+using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
+using UnityEditor.SettingsManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,18 +10,63 @@ namespace PostEnot.EditorExtensions.Editor
 {
     internal sealed partial class EditorAttributesSettingsAsset : ScriptableObject
     {
+        private const string _prefKeySettingsGuid = "settingsGuid";
+        private const string _packageName = "com.postenot.editorextensions";
+        private const string _defaultCreateSettingsPath = "Assets/EditorExtensionsSettings.asset";
         private const string _defaultSettingsGUID = "da2cfa0f35ae5224d92ac9bba76ff5f8";
-        private const string _currentSettingsGUIDPrefsKey = "PostEnot_EditorAttributes_CurrentSettingsGUIDPrefsKey";
-        private const string _pathToCreateAsset = "Assets/EditorAttributesSettingsAsset.asset";
 
         #region Inspector
         [Header("Style Sheets:")]
         [SerializeField, Label("Line Decorator")] private StyleSheet lineDecoratorStyleSheet;
-        [SerializeField, Label("Slider")]         private StyleSheet sliderStyleSheet;
-        [SerializeField, Label("Vector Labels")]  private StyleSheet vectorLabelsStyleSheet;
-        [SerializeField, Label("Table")]          private StyleSheet tableStyleSheet;
-        [SerializeField, Label("Preview")]        private StyleSheet previewStyleSheet;
-        [SerializeField, Label("MinMaxSlider")]   private StyleSheet minMaxSliderStyleSheet;
+        [SerializeField, Label("Slider")] private StyleSheet sliderStyleSheet;
+        [SerializeField, Label("Vector Labels")] private StyleSheet vectorLabelsStyleSheet;
+        [SerializeField, Label("Table")] private StyleSheet tableStyleSheet;
+        [SerializeField, Label("Preview")] private StyleSheet previewStyleSheet;
+        [SerializeField, Label("MinMaxSlider")] private StyleSheet minMaxSliderStyleSheet;
+        [SerializeField, Label("Components Column")] private StyleSheet componentsColumnStyleSheet;
+        [SerializeField] private Dictionary<string, Color> hierarchySpecialNames = new()
+        {
+            {
+                "[red]",
+                new Color(192f / 255f, 57f / 255f, 43f / 255f)
+            },
+            {
+                "[orange]",
+                new Color(192f / 255f, 86f / 255f, 0f / 255f)
+            },
+            {
+                "[yellow]",
+                new Color(166f / 255f, 124f / 255f, 0f / 255f)
+            },
+            {
+                "[lightGreen]",
+                new Color(56f / 255f, 142f / 255f, 60f / 255f)
+            },
+            {
+                "[darkGreen]",
+                new Color(27f / 255f, 94f / 255f, 32f / 255f)
+            },
+            {
+                "[cyan]",
+                new Color(0f / 255f, 131f / 255f, 143f / 255f)
+            },
+            {
+                "[blue]",
+                new Color(13f / 255f, 71f / 255f, 161f / 255f)
+            },
+            {
+                "[pink]",
+                new Color(194f / 255f, 24f / 255f, 91f / 255f)
+            },
+            {
+                "[purple]",
+                new Color(123f / 255f, 31f / 255f, 162f / 255f)
+            },
+            {
+                "[black]",
+                new Color(26f / 255f, 26f / 255f, 26f / 255f)
+            }
+        };
         #endregion
 
         public StyleSheet LineDecoratorStyleSheet => lineDecoratorStyleSheet;
@@ -28,8 +75,12 @@ namespace PostEnot.EditorExtensions.Editor
         public StyleSheet TableStyleSheet => tableStyleSheet;
         public StyleSheet PreviewStyleSheet => previewStyleSheet;
         public StyleSheet MinMaxSliderStyleSheet => minMaxSliderStyleSheet;
+        public StyleSheet ComponentsColumnStyleSheet => componentsColumnStyleSheet;
 
         [AutoStaticsCleanup] private static EditorAttributesSettingsAsset _instance;
+
+        public bool TryGetHirarchyColorBySpecialName(string name, out Color color)
+            => hierarchySpecialNames.TryGetValue(name, out color);
 
         public static EditorAttributesSettingsAsset GetSettings()
         {
@@ -42,25 +93,35 @@ namespace PostEnot.EditorExtensions.Editor
 
         private static EditorAttributesSettingsAsset GetOrCreateSettings()
         {
-            EditorAttributesSettingsAsset settingsAsset;
-            if (EditorPrefs.HasKey(_currentSettingsGUIDPrefsKey))
+            Settings settings = new(_packageName);
+            EditorAttributesSettingsAsset settingsAsset = null;
+            if (settings.ContainsKey<string>(_prefKeySettingsGuid, SettingsScope.Project))
             {
-                string strGUID = EditorPrefs.GetString(_currentSettingsGUIDPrefsKey);
-                if (TryGetSettingsByGUID(strGUID, out settingsAsset))
+                string guid = settings.Get<string>(_prefKeySettingsGuid, SettingsScope.Project);
+                if (TryGetSettingsByGUID(guid, out settingsAsset))
                 {
                     return settingsAsset;
                 }
             }
-            if (TryGetSettingsByGUID(_defaultSettingsGUID, out settingsAsset))
+            settingsAsset = AssetDatabase.LoadAssetAtPath<EditorAttributesSettingsAsset>(_defaultCreateSettingsPath);
+            if (settingsAsset == null)
             {
-                return settingsAsset;
+                if (TryGetSettingsByGUID(_defaultSettingsGUID, out EditorAttributesSettingsAsset settingsTemplate))
+                {
+                    settingsAsset = Instantiate(settingsTemplate);
+                }
+                else
+                {
+                    settingsAsset = CreateInstance<EditorAttributesSettingsAsset>();
+
+                }
+                AssetDatabase.CreateAsset(settingsAsset, _defaultCreateSettingsPath);
+                AssetDatabase.SaveAssets();
             }
-            settingsAsset = CreateInstance<EditorAttributesSettingsAsset>();
-            AssetDatabase.CreateAsset(settingsAsset, _pathToCreateAsset);
-            AssetDatabase.SaveAssets();
-            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(settingsAsset, out string strGuid, out long localId))
+            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(settingsAsset, out string settingsGuid, out _))
             {
-                EditorPrefs.SetString(_currentSettingsGUIDPrefsKey, strGuid);
+                settings.Set(_prefKeySettingsGuid, settingsGuid, SettingsScope.Project);
+                settings.Save();
             }
             return settingsAsset;
         }

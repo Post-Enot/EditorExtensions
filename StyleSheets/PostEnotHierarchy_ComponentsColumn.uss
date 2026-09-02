@@ -1,0 +1,16 @@
+.pe-component-icon-row {
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+
+.pe-component-icon {
+    width: 14px;
+    height: 14px;
+    margin-left: 3px;
+    margin-top: 3px;
+    min-width: 14px;
+    min-height: 14px;
+    max-height: 14px;
+    max-width: 14px;
+}

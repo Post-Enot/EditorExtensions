@@ -2,8 +2,8 @@
 {
     public abstract class DisableInAttribute : ModifyPropertyAttribute
     {
-        internal DisableInAttribute(bool inEditor) => InEditor = inEditor;
+        internal DisableInAttribute(bool isEnabledInEditor) => IsEnabledInEditor = isEnabledInEditor;
 
-        public bool InEditor { get; }
+        public bool IsEnabledInEditor { get; }
     }
 }

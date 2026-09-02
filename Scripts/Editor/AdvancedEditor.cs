@@ -33,6 +33,14 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 container.SetEnabled(false);
             }
+            else
+            {
+                if (targetType.TryGetCustomAttribute(out DisableInspectorInAttribute disableInspectorInAttribute))
+                {
+                    bool isEnabled = disableInspectorInAttribute.IsEnabledInEditor ^ EditorApplication.isPlayingOrWillChangePlaymode;
+                    container.SetEnabled(isEnabled);
+                }
+            }
             return container;
         }
 

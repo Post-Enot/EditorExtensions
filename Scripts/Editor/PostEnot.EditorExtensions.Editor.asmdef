@@ -2,7 +2,8 @@
     "name": "PostEnot.EditorExtensions.Editor",
     "rootNamespace": "PostEnot.EditorExtensions.Editor",
     "references": [
-        "GUID:ee1815bdb202ad443915f7a3215c28ae"
+        "GUID:ee1815bdb202ad443915f7a3215c28ae",
+        "GUID:49818357e697641afb75d2f8acaf1861"
     ],
     "includePlatforms": [
         "Editor"

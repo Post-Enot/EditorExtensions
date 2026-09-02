@@ -2,6 +2,6 @@
 {
     public sealed class DisableInPlayModeAttribute : DisableInAttribute
     {
-        public DisableInPlayModeAttribute() : base(false) { }
+        public DisableInPlayModeAttribute() : base(true) { }
     }
 }

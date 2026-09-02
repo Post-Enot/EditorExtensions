@@ -16,10 +16,14 @@ namespace PostEnot.EditorExtensions.Editor
         {
             base.OnActivate(searchContext, rootElement);
             SerializedObject serializedObject = new(Settings);
-            SerializedProperty serializedProperty = serializedObject.FindProperty("lineDecoratorStyleSheet");
-            PropertyField propertyField = new(serializedProperty, serializedProperty.displayName);
-            propertyField.BindProperty(serializedProperty);
-            rootElement.Add(propertyField);
+            SerializedProperty lineDecoratorProperty = serializedObject.FindProperty("lineDecoratorStyleSheet");
+            PropertyField lineDecoratorField = new(lineDecoratorProperty, lineDecoratorProperty.displayName);
+            lineDecoratorField.BindProperty(lineDecoratorProperty);
+            SerializedProperty hierarchySpecialNamesProperty = serializedObject.FindProperty("hierarchySpecialNames");
+            PropertyField hierarchySpecialNamesField = new(hierarchySpecialNamesProperty);
+            hierarchySpecialNamesField.BindProperty(hierarchySpecialNamesProperty);
+            rootElement.Add(lineDecoratorField);
+            rootElement.Add(hierarchySpecialNamesField);
         }
 
         [SettingsProvider]

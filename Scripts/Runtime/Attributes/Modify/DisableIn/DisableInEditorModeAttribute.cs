@@ -2,6 +2,6 @@
 {
     public sealed class DisableInEditorModeAttribute : DisableInAttribute
     {
-        public DisableInEditorModeAttribute() : base(true) { }
+        public DisableInEditorModeAttribute() : base(false) { }
     }
 }
