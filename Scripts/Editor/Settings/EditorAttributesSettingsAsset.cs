@@ -1,11 +1,12 @@
 ﻿using PostEnot.Toolkits;
+using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    internal sealed class EditorAttributesSettingsAsset : ScriptableObject
+    internal sealed partial class EditorAttributesSettingsAsset : ScriptableObject
     {
         private const string _defaultSettingsGUID = "da2cfa0f35ae5224d92ac9bba76ff5f8";
         private const string _currentSettingsGUIDPrefsKey = "PostEnot_EditorAttributes_CurrentSettingsGUIDPrefsKey";
@@ -28,7 +29,7 @@ namespace PostEnot.EditorExtensions.Editor
         public StyleSheet PreviewStyleSheet => previewStyleSheet;
         public StyleSheet MinMaxSliderStyleSheet => minMaxSliderStyleSheet;
 
-        private static EditorAttributesSettingsAsset _instance;
+        [AutoStaticsCleanup] private static EditorAttributesSettingsAsset _instance;
 
         public static EditorAttributesSettingsAsset GetSettings()
         {
