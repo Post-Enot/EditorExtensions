@@ -19,24 +19,45 @@ MonoBehaviour:
   previewStyleSheet: {fileID: 7433441132597879392, guid: 6aec1f4fec5989347b0a7e0f69cdfea3, type: 3}
   minMaxSliderStyleSheet: {fileID: 7433441132597879392, guid: 20c9c5639d597f34f809b44a436a2d35, type: 3}
   componentsColumnStyleSheet: {fileID: 7433441132597879392, guid: 0ae2911d7948ba9468bf97b0aa81aec7, type: 3}
+  advancedHierarchyStyleSheet: {fileID: 7433441132597879392, guid: bc236bb340af6e34284ca99e49395b24, type: 3}
   hierarchySpecialNames:
-  - key: '[red]'
-    value: {r: 0.7529412, g: 0.22352941, b: 0.16862746, a: 1}
-  - key: '[orange]'
-    value: {r: 0.7529412, g: 0.3372549, b: 0, a: 1}
-  - key: '[yellow]'
-    value: {r: 0.6509804, g: 0.4862745, b: 0, a: 1}
-  - key: '[lightGreen]'
-    value: {r: 0.21960784, g: 0.5568628, b: 0.23529412, a: 1}
-  - key: '[darkGreen]'
-    value: {r: 0.105882354, g: 0.36862746, b: 0.1254902, a: 1}
-  - key: '[cyan]'
-    value: {r: 0, g: 0.5137255, b: 0.56078434, a: 1}
-  - key: '[blue]'
-    value: {r: 0.050980393, g: 0.2784314, b: 0.6313726, a: 1}
-  - key: '[pink]'
-    value: {r: 0.7607843, g: 0.09411765, b: 0.35686275, a: 1}
-  - key: '[purple]'
-    value: {r: 0.48235294, g: 0.12156863, b: 0.63529414, a: 1}
-  - key: '[black]'
-    value: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 1}
+  - pattern: 
+    mode: 1
+    color: {r: 1, g: 0, b: 0, a: 1}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0
+  - pattern: 
+    mode: 0
+    color: {r: 0, g: 0, b: 0, a: 0}
+    isBold: 0

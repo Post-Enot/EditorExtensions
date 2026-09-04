@@ -1,0 +1,3 @@
+.pe-hierarchy-item-view__name--bold {
+    -unity-font-style: bold;
+}

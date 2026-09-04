@@ -95,14 +95,6 @@ namespace PostEnot.EditorExtensions.Editor
         {
             GUIContent guiContent = EditorGUIUtility.ObjectContent(null, componentType);
             return guiContent.image;
-            //Attribute attribute = Attribute.GetCustomAttribute(componentType, typeof(IconAttribute));
-            //if ((attribute is IconAttribute icon) && !string.IsNullOrEmpty(icon.path))
-            //{
-            //    return EditorGUIUtility.FindTexture(icon.path);
-            //}
-            //string componentTypeName = componentType.FullName.Replace('.', '/');
-            //string textureName = $"{componentTypeName} Icon";
-            //return EditorGUIUtility.FindTexture(textureName);
         }
     }
 }
