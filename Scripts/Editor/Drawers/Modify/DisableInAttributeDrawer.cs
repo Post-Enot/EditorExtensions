@@ -14,6 +14,14 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             DisableInAttribute attribute)
         {
+            if (attribute == null)
+            {
+                return;
+            }
+            if (propertyField == null)
+            {
+                return;
+            }
             bool isEnabled = attribute.IsEnabledInEditor ^ EditorApplication.isPlayingOrWillChangePlaymode;
             propertyField.SetEnabled(isEnabled);
         }

@@ -12,6 +12,13 @@ namespace PostEnot.EditorExtensions.Editor
             SerializedProperty property,
             PropertyField propertyField,
             FieldInfo fieldInfo,
-            ReadOnlyAttribute attribute) => propertyField.SetEnabled(false);
+            ReadOnlyAttribute attribute)
+        {
+            if (propertyField == null)
+            {
+                return;
+            }
+            propertyField.SetEnabled(false);
+        }
     }
 }

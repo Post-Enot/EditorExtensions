@@ -1,10 +1,12 @@
 ﻿using PostEnot.Toolkits;
+using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    [CustomPropertyDrawer(typeof(HelpBoxAttribute))]
+    [CustomPropertyDrawer(typeof(HelpBoxAttribute), true)]
     public sealed class HelpBoxAttributeDrawer : DecoratorDrawer
     {
         public override VisualElement CreatePropertyGUI()
@@ -25,10 +27,25 @@ namespace PostEnot.EditorExtensions.Editor
             temp.schedule.Execute(() => AfterAttach(helpBoxAttribute, temp));
         }
 
-        private void AfterAttach(HelpBoxAttribute helpBoxAttribute, VisualElement temp)
+        private void AfterAttach(HelpBoxAttribute attribute, VisualElement temp)
         {
-            HelpBox helpBox = new(helpBoxAttribute.Text, helpBoxAttribute.MessageType);
-            UIUtility.ApplyDrawMode(helpBoxAttribute.DrawMode, temp, helpBox);
+            PropertyField propertyField = temp.GetFirstAncestorOfType<PropertyField>();
+            SerializedProperty serializedProperty = SerializationUtility.GetSerializedProperty(propertyField);
+            FieldInfo fieldInfo = SerializationUtility.GetFieldInfo(serializedProperty);
+            SerializedProperty parentSerializedProperty = SerializationUtility.GetParentProperty(serializedProperty);
+            string methodName = attribute.MethodName;
+            HelpBox helpBox = new(attribute.Text, attribute.MessageType);
+            if (methodName != null)
+            {
+                helpBox.onButtonClicked += UIUtility.CreateActionFromMethodName(
+                    serializedProperty,
+                    parentSerializedProperty,
+                    fieldInfo,
+                    methodName,
+                    out MethodInfo methodInfo);
+                helpBox.buttonText = UIUtility.NicifyButtonName(attribute.ButtonText, methodInfo);
+            }
+            UIUtility.ApplyDrawMode(attribute.DrawMode, temp, helpBox);
         }
     }
 }

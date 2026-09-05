@@ -14,10 +14,19 @@ namespace PostEnot.EditorExtensions.Editor
             FieldInfo fieldInfo,
             LabelAttribute attribute)
         {
-            if ((propertyField != null) && (propertyField.label != string.Empty))
+            if (attribute == null)
             {
-                propertyField.label = attribute.Label;
+                return;
             }
+            if (propertyField == null)
+            {
+                return;
+            }
+            if (propertyField.label == string.Empty)
+            {
+                return;
+            }
+            propertyField.label = string.IsNullOrWhiteSpace(attribute.Label) ? string.Empty : attribute.Label;
         }
     }
 }

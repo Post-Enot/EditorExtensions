@@ -50,8 +50,7 @@ namespace PostEnot.EditorExtensions.Editor
         {
             var entityId = item.View.Source.GetEntityIdFromNode(item.Node);
             var obj = EditorUtility.EntityIdToObject(entityId);
-            var gameObject = obj as GameObject;
-            if (gameObject == null)
+            if (obj is not GameObject gameObject)
             {
                 return;
             }

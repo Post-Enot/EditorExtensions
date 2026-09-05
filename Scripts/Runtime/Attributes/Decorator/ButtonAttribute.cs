@@ -16,5 +16,6 @@
 
         public string Text { get; }
         public string MethodName { get; }
+        public string Icon { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
@@ -36,42 +37,21 @@ namespace PostEnot.EditorExtensions.Editor
             SerializedProperty parentSerializedProperty = SerializationUtility.GetParentProperty(serializedProperty);
             string methodName = attribute.MethodName;
 
-            Button button = new()
-            {
-                text = attribute.Text ?? ObjectNames.NicifyVariableName(attribute.MethodName),
-            };
+            Button button = new();
             button.style.marginLeft = 0;
             button.style.marginRight = 0;
-            object instance = parentSerializedProperty switch
+            Action action = UIUtility.CreateActionFromMethodName(
+                serializedProperty,
+                parentSerializedProperty,
+                fieldInfo,
+                methodName,
+                out MethodInfo methodInfo);
+            button.text = UIUtility.NicifyButtonName(attribute.Text, methodInfo);
+            button.clickable = new Clickable(action);
+            if (attribute.Icon != null)
             {
-                null => serializedProperty.serializedObject.targetObject,
-                { propertyType: SerializedPropertyType.ExposedReference or SerializedPropertyType.ObjectReference }
-                    => parentSerializedProperty.objectReferenceValue,
-                { propertyType: SerializedPropertyType.ManagedReference } => parentSerializedProperty.managedReferenceValue,
-                _ => null
-            };
-            if (instance != null)
-            {
-                MethodInfo methodInfo = SerializationUtility.FindMethod(fieldInfo.DeclaringType, methodName);
-                Action action = SerializationUtility.MethodInfoToDelegate(methodInfo, instance);
-                button.clickable = new Clickable(() =>
-                {
-                    action?.Invoke();
-                    serializedProperty.serializedObject.ApplyModifiedProperties();
-                });
-            }
-            else if (parentSerializedProperty.propertyType is SerializedPropertyType.Generic)
-            {
-                instance = parentSerializedProperty.boxedValue;
-                Type instanceType = instance.GetType();
-                MethodInfo methodInfo = SerializationUtility.FindMethod(instanceType, methodName);
-                button.clickable = new Clickable(() =>
-                {
-                    object instance = parentSerializedProperty.boxedValue;
-                    methodInfo.Invoke(instance, null);
-                    parentSerializedProperty.boxedValue = instance;
-                    parentSerializedProperty.serializedObject.ApplyModifiedProperties();
-                });
+                Texture2D texture = UIUtility.LoadIcon(attribute.Icon);
+                button.iconImage = Background.FromTexture2D(texture);
             }
             UIUtility.ApplyDrawMode(attribute.DrawMode, temp, button);
             temp.RegisterCallbackOnce<DetachFromPanelEvent>(_ => button.RemoveFromHierarchy());

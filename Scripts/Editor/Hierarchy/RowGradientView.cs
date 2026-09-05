@@ -51,19 +51,18 @@ namespace PostEnot.EditorExtensions.Editor
             if (rect.width <= 0f || rect.height <= 0f)
                 return;
 
-            Color leftColor = _color;
-            Color rightColor = new(_color.r, _color.g, _color.b, 0f);
             Gradient gradient = new()
             {
                 colorKeys = new GradientColorKey[2]
                 {
-                    new(leftColor, 0.0f),
-                    new(rightColor, 1.0f)
+                    new(_color, 0.0f),
+                    new(_color, 1.0f)
                 },
-                alphaKeys = new GradientAlphaKey[2]
+                alphaKeys = new GradientAlphaKey[3]
                 {
                     new(1.0f, 0.0f),
-                    new(0.0f, 1.0f)
+                    new(0.7f, 0.5f), // почти непрозрачно до 70% времени
+                    new(0.0f, 1.0f)  // резкое исчезновение в конце
                 }
             };
 
