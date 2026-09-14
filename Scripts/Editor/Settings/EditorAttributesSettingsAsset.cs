@@ -17,16 +17,18 @@ namespace PostEnot.EditorExtensions.Editor
         private const string _defaultSettingsGUID = "da2cfa0f35ae5224d92ac9bba76ff5f8";
 
         #region Inspector
-        [Header("Style Sheets:")]
+        [Header("Attributes Style Sheets")]
         [SerializeField, Label("Line Decorator")] private StyleSheet lineDecoratorStyleSheet;
         [SerializeField, Label("Slider")] private StyleSheet sliderStyleSheet;
         [SerializeField, Label("Vector Labels")] private StyleSheet vectorLabelsStyleSheet;
         [SerializeField, Label("Table")] private StyleSheet tableStyleSheet;
         [SerializeField, Label("Preview")] private StyleSheet previewStyleSheet;
         [SerializeField, Label("MinMaxSlider")] private StyleSheet minMaxSliderStyleSheet;
+
+        [Header("Hierarchy Style Sheets")]
         [SerializeField, Label("Components Column")] private StyleSheet componentsColumnStyleSheet;
         [SerializeField, Label("Advanced Hierarchy")] private StyleSheet advancedHierarchyStyleSheet;
-        [SerializeField, Table] private List<HierarchySpecialNameData> hierarchySpecialNames = new();
+        [SerializeField, Table, Label("<b>Special Names</b>")] private List<HierarchySpecialNameData> hierarchySpecialNames = new();
         //{
         //    {
         //        "[red]",
@@ -80,7 +82,7 @@ namespace PostEnot.EditorExtensions.Editor
         public StyleSheet ComponentsColumnStyleSheet => componentsColumnStyleSheet;
         public StyleSheet AdvancedHierarchyStyleSheet => advancedHierarchyStyleSheet;
 
-        public event Action SpecialNamesChanged;
+        [AutoStaticsCleanup] public static event Action SpecialNamesChanged;
 
         [AutoStaticsCleanup] private static EditorAttributesSettingsAsset _instance;
 

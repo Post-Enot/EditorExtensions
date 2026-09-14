@@ -5,14 +5,14 @@ using UnityEditor.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    [CustomPropertyDrawer(typeof(DisableInAttribute), true)]
-    internal sealed class DisableInAttributeDrawer : ModifyAttributeDrawer<DisableInAttribute>
+    [CustomPropertyDrawer(typeof(ReadOnlyInAttribute), true)]
+    internal sealed class ReadOnlyInAttributeDrawer : ModifyAttributeDrawer<ReadOnlyInAttribute>
     {
         private protected override void OnAttach(
             SerializedProperty property,
             PropertyField propertyField,
             FieldInfo fieldInfo,
-            DisableInAttribute attribute)
+            ReadOnlyInAttribute attribute)
         {
             if (attribute == null)
             {

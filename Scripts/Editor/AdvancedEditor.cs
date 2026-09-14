@@ -29,15 +29,15 @@ namespace PostEnot.EditorExtensions.Editor
                 }
                 : Array.Empty<string>();
             InspectorElement.FillDefaultInspector(container, serializedObject, this, propertiesToExclude);
-            if (targetType.HasCustomAttribute<DisableInspectorAttribute>())
+            if (targetType.HasCustomAttribute<ReadOnlyInspectorAttribute>())
             {
                 container.SetEnabled(false);
             }
             else
             {
-                if (targetType.TryGetCustomAttribute(out DisableInspectorInAttribute disableInspectorInAttribute))
+                if (targetType.TryGetCustomAttribute(out ReadOnlyInspectorInAttribute readOnlyInspectorInAttribute))
                 {
-                    bool isEnabled = disableInspectorInAttribute.IsEnabledInEditor ^ EditorApplication.isPlayingOrWillChangePlaymode;
+                    bool isEnabled = readOnlyInspectorInAttribute.IsEnabledInEditor ^ EditorApplication.isPlayingOrWillChangePlaymode;
                     container.SetEnabled(isEnabled);
                 }
             }
