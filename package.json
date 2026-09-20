@@ -9,5 +9,8 @@
     "url": "https://t.me/ProcyonNihil"
   },
   "documentationUrl": "https://github.com/Post-Enot/EditorExtensions/wiki",
-  "type": "library"
+  "type": "library",
+  "dependencies": {
+    "com.unity.settings-manager": "2.1.1"
+  }
 }
