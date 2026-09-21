@@ -1,7 +1,11 @@
-﻿using PostEnot.Toolkits;
+﻿#nullable enable
+
+using PostEnot.Toolkits;
 using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine.Pool;
 using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
@@ -13,7 +17,7 @@ namespace PostEnot.EditorExtensions.Editor
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement container = new();
-            Type targetType = GetTargetType();
+            Type? targetType = GetTargetType(serializedObject);
             if (targetType == null)
             {
                 return container;
@@ -22,12 +26,7 @@ namespace PostEnot.EditorExtensions.Editor
             {
                 return container;
             }
-            string[] propertiesToExclude = targetType.HasCustomAttribute<HideClassFieldAttribute>()
-                ? new string[1]
-                {
-                    SerializationUtility.mScriptField
-                }
-                : Array.Empty<string>();
+            string[] propertiesToExclude = GetPropertiesToExclude(targetType);
             InspectorElement.FillDefaultInspector(container, serializedObject, this, propertiesToExclude);
             if (targetType.HasCustomAttribute<ReadOnlyInspectorAttribute>())
             {
@@ -35,18 +34,49 @@ namespace PostEnot.EditorExtensions.Editor
             }
             else
             {
-                if (targetType.TryGetCustomAttribute(out ReadOnlyInspectorInAttribute readOnlyInspectorInAttribute))
+                if (targetType.TryGetCustomAttribute(out ReadOnlyInspectorInAttribute? readOnlyInspectorInAttribute))
                 {
                     bool isEnabled = readOnlyInspectorInAttribute.IsEnabledInEditor ^ EditorApplication.isPlayingOrWillChangePlaymode;
                     container.SetEnabled(isEnabled);
                 }
+            }
+            List<ButtonAttributeMethodData> buttonsData = ListPool<ButtonAttributeMethodData>.Get();
+            try
+            {
+                ButtonMethodsFinder.FindButtons(targetType, buttonsData);
+                foreach (ButtonAttributeMethodData buttonData in buttonsData)
+                {
+                    Action clickEvent = () =>
+                    {
+                        foreach (UnityEngine.Object target in targets)
+                        {
+                            if (target == null)
+                            {
+                                continue;
+                            }
+                            Action? methodAction = SerializationUtility.MethodInfoToDelegate(buttonData.Method, target);
+                            methodAction?.Invoke();
+                        }
+                    };
+                    Button button = new(clickEvent)
+                    {
+                        text = string.IsNullOrWhiteSpace(buttonData.Attribute.Text)
+                            ? buttonData.Method.Name
+                            : buttonData.Attribute.Text
+                    };
+                    container.Add(button);
+                }
+            }
+            finally
+            {
+                ListPool<ButtonAttributeMethodData>.Release(buttonsData);
             }
             return container;
         }
 
         protected override bool ShouldHideOpenButton()
         {
-            Type targetType = GetTargetType();
+            Type? targetType = GetTargetType(serializedObject);
             if (targetType == null)
             {
                 return false;
@@ -54,7 +84,19 @@ namespace PostEnot.EditorExtensions.Editor
             return targetType.HasCustomAttribute<HideOpenButtonAttribute>();
         }
 
-        private Type GetTargetType()
+        private static string[] GetPropertiesToExclude(Type targetType)
+        {
+            if (targetType.HasCustomAttribute<HideClassFieldAttribute>())
+            {
+                return new string[1]
+                {
+                    SerializationUtility.mScriptField
+                };
+            }
+            return Array.Empty<string>();
+        }
+
+        private static Type? GetTargetType(SerializedObject? serializedObject)
         {
             if (serializedObject == null)
             {

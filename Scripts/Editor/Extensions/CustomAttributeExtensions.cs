@@ -1,4 +1,7 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace PostEnot.EditorExtensions.Editor
@@ -11,7 +14,18 @@ namespace PostEnot.EditorExtensions.Editor
             return attribute != null;
         }
 
-        internal static bool TryGetCustomAttribute<T>(this MemberInfo self, out T attribute) where T : Attribute
+        internal static bool TryGetCustomAttribute<T>(
+            this MemberInfo self,
+            [NotNullWhen(true)] out T? attribute,
+            bool inherit) where T : Attribute
+        {
+            attribute = self.GetCustomAttribute<T>(inherit);
+            return attribute != null;
+        }
+
+        internal static bool TryGetCustomAttribute<T>(
+            this MemberInfo self,
+            [NotNullWhen(true)] out T? attribute) where T : Attribute
         {
             attribute = self.GetCustomAttribute<T>();
             return attribute != null;

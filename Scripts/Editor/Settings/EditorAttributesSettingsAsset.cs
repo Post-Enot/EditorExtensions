@@ -9,6 +9,7 @@ using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
+    [HelpURL("https://github.com/Post-Enot/EditorExtensions/wiki")]
     internal sealed partial class EditorAttributesSettingsAsset : ScriptableObject
     {
         private const string _prefKeySettingsGuid = "settingsGuid";
@@ -28,6 +29,8 @@ namespace PostEnot.EditorExtensions.Editor
         [Header("Hierarchy Style Sheets")]
         [SerializeField, Label("Components Column")] private StyleSheet componentsColumnStyleSheet;
         [SerializeField, Label("Advanced Hierarchy")] private StyleSheet advancedHierarchyStyleSheet;
+
+        [Space(10)]
         [SerializeField, Table, Label("<b>Special Names</b>")] private List<HierarchySpecialNameData> hierarchySpecialNames = new();
         //{
         //    {

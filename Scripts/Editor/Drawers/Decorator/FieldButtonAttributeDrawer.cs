@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    [CustomPropertyDrawer(typeof(ButtonAttribute))]
-    internal sealed class ButtonAttributeDrawer : DecoratorDrawer
+    [CustomPropertyDrawer(typeof(FieldButtonAttribute))]
+    internal sealed class FieldButtonAttributeDrawer : DecoratorDrawer
     {
         public override VisualElement CreatePropertyGUI()
         {
@@ -25,11 +25,11 @@ namespace PostEnot.EditorExtensions.Editor
         private void OnAttachToPanel(AttachToPanelEvent context)
         {
             VisualElement temp = context.target as VisualElement;
-            ButtonAttribute attribute = temp.userData as ButtonAttribute;
+            FieldButtonAttribute attribute = temp.userData as FieldButtonAttribute;
             temp.schedule.Execute(() => OnAfterAttach(attribute, temp));
         }
 
-        private void OnAfterAttach(ButtonAttribute attribute, VisualElement temp)
+        private void OnAfterAttach(FieldButtonAttribute attribute, VisualElement temp)
         {
             PropertyField propertyField = temp.GetFirstAncestorOfType<PropertyField>();
             SerializedProperty serializedProperty = SerializationUtility.GetSerializedProperty(propertyField);
