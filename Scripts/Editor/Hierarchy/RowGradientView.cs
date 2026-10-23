@@ -51,27 +51,29 @@ namespace PostEnot.EditorExtensions.Editor
             if (rect.width <= 0f || rect.height <= 0f)
                 return;
 
-            Gradient gradient = new()
-            {
-                colorKeys = new GradientColorKey[2]
-                {
-                    new(_color, 0.0f),
-                    new(_color, 1.0f)
-                },
-                alphaKeys = new GradientAlphaKey[3]
-                {
-                    new(1.0f, 0.0f),
-                    new(0.7f, 0.5f), // почти непрозрачно до 70% времени
-                    new(0.0f, 1.0f)  // резкое исчезновение в конце
-                }
-            };
+            //Gradient gradient = new()
+            //{
+            //    colorKeys = new GradientColorKey[2]
+            //    {
+            //        new(_color, 0.0f),
+            //        new(_color, 1.0f)
+            //    },
+            //    alphaKeys = new GradientAlphaKey[3]
+            //    {
+            //        new(1.0f, 0.0f),
+            //        new(0.7f, 0.5f), // почти непрозрачно до 70% времени
+            //        new(0.0f, 1.0f)  // резкое исчезновение в конце
+            //    }
+            //};
 
-            painter.fillGradient = new FillGradient()
-            {
-                start = new Vector2(rect.xMin, rect.yMin),
-                end = new Vector2(rect.xMax, rect.yMin),
-                gradient = gradient
-            };
+            //painter.fillGradient = new FillGradient()
+            //{
+            //    start = new Vector2(rect.xMin, rect.yMin),
+            //    end = new Vector2(rect.xMax, rect.yMin),
+            //    gradient = gradient
+            //};
+
+            painter.fillColor = _color;
 
             // Создаём контур прямоугольника
             painter.BeginPath();
