@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
-using UnityEditor;
 using UnityEditor.SettingsManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -87,6 +86,7 @@ namespace PostEnot.EditorExtensions.Editor
 
         [AutoStaticsCleanup] public static event Action SpecialNamesChanged;
 
+        [AutoStaticsCleanup] private static Settings _settings;
         [AutoStaticsCleanup] private static EditorAttributesSettingsAsset _instance;
 
         public void InvokeSpecialNamesChanged() => SpecialNamesChanged?.Invoke();
@@ -128,57 +128,26 @@ namespace PostEnot.EditorExtensions.Editor
 
         public static EditorAttributesSettingsAsset GetSettings()
         {
+            if (_settings == null)
+            {
+                _settings = new Settings(_packageName);
+                _settings.afterSettingsSaved += UpdateSettingsCache;
+            }
             if (_instance == null)
             {
-                _instance = GetOrCreateSettings();
+                UpdateSettingsCache();
             }
             return _instance;
         }
 
-        private static EditorAttributesSettingsAsset GetOrCreateSettings()
-        {
-            Settings settings = new(_packageName);
-            EditorAttributesSettingsAsset settingsAsset = null;
-            if (settings.ContainsKey<string>(_prefKeySettingsGuid, SettingsScope.Project))
-            {
-                string guid = settings.Get<string>(_prefKeySettingsGuid, SettingsScope.Project);
-                if (TryGetSettingsByGUID(guid, out settingsAsset))
-                {
-                    return settingsAsset;
-                }
-            }
-            settingsAsset = AssetDatabase.LoadAssetAtPath<EditorAttributesSettingsAsset>(_defaultCreateSettingsPath);
-            if (settingsAsset == null)
-            {
-                if (TryGetSettingsByGUID(_defaultSettingsGUID, out EditorAttributesSettingsAsset settingsTemplate))
-                {
-                    settingsAsset = Instantiate(settingsTemplate);
-                }
-                else
-                {
-                    settingsAsset = CreateInstance<EditorAttributesSettingsAsset>();
+        public static void SetSettings(EditorAttributesSettingsAsset settingsAsset)
+            => SettingsUtility.SetSettingsAsset(settingsAsset, _settings, _prefKeySettingsGuid);
 
-                }
-                AssetDatabase.CreateAsset(settingsAsset, _defaultCreateSettingsPath);
-                AssetDatabase.SaveAssets();
-            }
-            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(settingsAsset, out string settingsGuid, out _))
-            {
-                settings.Set(_prefKeySettingsGuid, settingsGuid, SettingsScope.Project);
-                settings.Save();
-            }
-            return settingsAsset;
-        }
-
-        private static bool TryGetSettingsByGUID(string strGuid, out EditorAttributesSettingsAsset settingsAsset)
-        {
-            if (GUID.TryParse(strGuid, out GUID guid))
-            {
-                settingsAsset = AssetDatabase.LoadAssetByGUID<EditorAttributesSettingsAsset>(guid);
-                return settingsAsset != null;
-            }
-            settingsAsset = null;
-            return false;
-        }
+        private static void UpdateSettingsCache()
+            => _instance = SettingsUtility.GetOrCreateSettingsAsset<EditorAttributesSettingsAsset>(
+                    _settings,
+                    _prefKeySettingsGuid,
+                    _defaultCreateSettingsPath,
+                    _defaultSettingsGUID);
     }
 }

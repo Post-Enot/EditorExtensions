@@ -12,24 +12,54 @@ namespace PostEnot.EditorExtensions.Editor
 
         public override void OnActivate(string searchContext, VisualElement rootElement)
         {
-            EditorAttributesSettingsAsset settings = EditorAttributesSettingsAsset.GetSettings();
             base.OnActivate(searchContext, rootElement);
-            SerializedObject serializedObject = new(settings);
-            SerializedProperty lineDecoratorProperty = serializedObject.FindProperty("lineDecoratorStyleSheet");
-            PropertyField lineDecoratorField = new(lineDecoratorProperty, lineDecoratorProperty.displayName);
-            lineDecoratorField.BindProperty(lineDecoratorProperty);
-            SerializedProperty hierarchySpecialNamesProperty = serializedObject.FindProperty("hierarchySpecialNames");
-            PropertyField hierarchySpecialNamesField = new(hierarchySpecialNamesProperty);
-            hierarchySpecialNamesField.BindProperty(hierarchySpecialNamesProperty);
-            hierarchySpecialNamesField.TrackPropertyValue(hierarchySpecialNamesProperty, SpecialNamesPropertyChanged);
-            rootElement.Add(lineDecoratorField);
-            rootElement.Add(hierarchySpecialNamesField);
+            BuildUI(rootElement);
         }
 
-        private void SpecialNamesPropertyChanged(SerializedProperty serializedProperty)
+        private void BuildUI(VisualElement rootElement)
         {
-            EditorAttributesSettingsAsset settings = EditorAttributesSettingsAsset.GetSettings();
-            settings.InvokeSpecialNamesChanged();
+            rootElement.Clear();
+            EditorAttributesSettingsAsset currentSettings = EditorAttributesSettingsAsset.GetSettings();
+            // 1. Поле для выбора "актуального" ассета настроек
+            ObjectField settingsAssetField = new("Settings Asset")
+            {
+                objectType = typeof(EditorAttributesSettingsAsset),
+                allowSceneObjects = false,
+                value = currentSettings
+            };
+            VisualElement inspectorContainer = new();
+            settingsAssetField.RegisterValueChangedCallback(evt =>
+            {
+                if (evt.newValue is EditorAttributesSettingsAsset newSettings)
+                {
+                    EditorAttributesSettingsAsset.SetSettings(newSettings);
+                }
+                // Пересобираем UI отложенно, т.к. текущий ObjectField будет удалён из rootElement
+                rootElement.schedule.Execute(() => DrawInspector(inspectorContainer, settingsAssetField.value as EditorAttributesSettingsAsset));
+            });
+            rootElement.Add(settingsAssetField);
+            rootElement.Add(inspectorContainer);
+            DrawInspector(inspectorContainer, currentSettings);
+        }
+
+        private static void DrawInspector(VisualElement inspectorContainer, EditorAttributesSettingsAsset currentSettings)
+        {
+            inspectorContainer.Clear();
+            if (currentSettings != null)
+            {
+                InspectorElement inspector = new(currentSettings);
+                inspectorContainer.Add(inspector);
+
+                // Сохраняем поведение: при изменении hierarchySpecialNames рассылаем событие
+                SerializedObject serializedObject = new(currentSettings);
+                SerializedProperty specialNamesProperty = serializedObject.FindProperty("hierarchySpecialNames");
+                if (specialNamesProperty != null)
+                {
+                    inspector.TrackPropertyValue(
+                        specialNamesProperty,
+                        _ => currentSettings.InvokeSpecialNamesChanged());
+                }
+            }
         }
 
         [SettingsProvider]
