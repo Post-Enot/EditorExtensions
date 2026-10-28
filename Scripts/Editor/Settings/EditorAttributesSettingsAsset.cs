@@ -11,12 +11,24 @@ namespace PostEnot.EditorExtensions.Editor
     [HelpURL("https://github.com/Post-Enot/EditorExtensions/wiki")]
     internal sealed partial class EditorAttributesSettingsAsset : ScriptableObject
     {
-        private const string _prefKeySettingsGuid = "settingsGuid";
-        private const string _packageName = "com.postenot.editorextensions";
-        private const string _defaultCreateSettingsPath = "Assets/EditorExtensionsSettings.asset";
-        private const string _defaultSettingsGUID = "da2cfa0f35ae5224d92ac9bba76ff5f8";
+        #region Inner
+        [Serializable]
+        public struct ScenePathReplacement
+        {
+            #region Inspector
+            [SerializeField, Label("Prefix")] private string prefix;
+            [SerializeField, Label("Replacement")] private string replacement;
+            #endregion
+
+            public readonly string Prefix => prefix;
+            public readonly string Replacement => replacement;
+        }
+        #endregion
 
         #region Inspector
+        [Space(10)]
+        [SerializeField, Table, Label("<b>Scene Path Replacements</b>")]
+        private List<ScenePathReplacement> scenePathReplacements = new();
         [Header("Attributes Style Sheets")]
         [SerializeField, Label("Line Decorator")] private StyleSheet lineDecoratorStyleSheet;
         [SerializeField, Label("Slider")] private StyleSheet sliderStyleSheet;
@@ -75,6 +87,11 @@ namespace PostEnot.EditorExtensions.Editor
         //};
         #endregion
 
+        private const string _prefKeySettingsGuid = "settingsGuid";
+        private const string _packageName = "com.postenot.editorextensions";
+        private const string _defaultCreateSettingsPath = "Assets/EditorExtensionsSettings.asset";
+        private const string _defaultSettingsGUID = "da2cfa0f35ae5224d92ac9bba76ff5f8";
+
         public StyleSheet LineDecoratorStyleSheet => lineDecoratorStyleSheet;
         public StyleSheet SliderStyleSheet => sliderStyleSheet;
         public StyleSheet VectorLabelsStyleSheet => vectorLabelsStyleSheet;
@@ -83,6 +100,7 @@ namespace PostEnot.EditorExtensions.Editor
         public StyleSheet MinMaxSliderStyleSheet => minMaxSliderStyleSheet;
         public StyleSheet ComponentsColumnStyleSheet => componentsColumnStyleSheet;
         public StyleSheet AdvancedHierarchyStyleSheet => advancedHierarchyStyleSheet;
+        public IReadOnlyList<ScenePathReplacement> ScenePathReplacements => scenePathReplacements;
 
         [AutoStaticsCleanup] public static event Action SpecialNamesChanged;
 

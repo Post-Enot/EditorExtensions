@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Unity.Scripting.LifecycleManagement;
 using UnityEditor;
@@ -5,10 +7,11 @@ using UnityEditor.SceneManagement;
 using UnityEditor.Toolbars;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using static PostEnot.EditorExtensions.Editor.EditorAttributesSettingsAsset;
 
 namespace PostEnot.EditorExtensions.Editor
 {
-    public class ToolbarSceenSelector
+    public sealed class ToolbarSceenSelector
     {
         static ToolbarSceenSelector()
         {
@@ -45,25 +48,81 @@ namespace PostEnot.EditorExtensions.Editor
             return new MainToolbarDropdown(content, ShowDropdownMenu);
         }
 
-        static void ShowDropdownMenu(Rect dropDownRect)
+        private static void ShowDropdownMenu(Rect dropDownRect)
         {
             GenericMenu menu = new();
+
             if (_scenePaths.Length == 0)
             {
                 menu.AddDisabledItem(new GUIContent("No Scenes in Project"));
+                menu.DropDown(dropDownRect);
+                return;
             }
+
+            IReadOnlyList<ScenePathReplacement> replacements = EditorAttributesSettingsAsset.GetSettings().ScenePathReplacements;
+
+            // Считаем display-пути один раз и сортируем по ним.
+            // GenericMenu трактует '/' в label как разделитель подменю,
+            // поэтому путь "Scenes/Level1/Foo" автоматически превращается
+            // в иерархию Scenes → Level1 → Foo. Замены префиксов позволяют
+            // переопределить эту иерархию как угодно.
+            var entries = new List<(string DisplayPath, string ScenePath)>(_scenePaths.Length);
             foreach (string scenePath in _scenePaths)
             {
-                string sceneName = Path.GetFileNameWithoutExtension(scenePath);
-                menu.AddItem(new GUIContent(sceneName), false, () =>
-                {
-                    SwitchScene(scenePath);
-                });
+                entries.Add((GetDisplayPath(scenePath, replacements), scenePath));
             }
+            entries.Sort((a, b) =>
+                string.Compare(a.DisplayPath, b.DisplayPath, StringComparison.OrdinalIgnoreCase));
+
+            foreach ((string displayPath, string scenePath) in entries)
+            {
+                string capturedScenePath = scenePath;
+                menu.AddItem(new GUIContent(displayPath), false, () => SwitchScene(capturedScenePath));
+            }
+
             menu.DropDown(dropDownRect);
         }
 
-        static void SwitchScene(string scenePath)
+        private static string NormalizeSlashes(string path)
+            => string.IsNullOrEmpty(path) ? path : path.Replace('\\', '/');
+
+        private static string GetDisplayPath(string scenePath, IReadOnlyList<ScenePathReplacement> replacements)
+        {
+            // Работаем только с прямыми слэшами:
+            //  - на Windows Directory.GetFiles вернёт 'Assets\Scenes\Foo.unity';
+            //  - GenericMenu трактует только '/' как разделитель подменю.
+            string displayPath = NormalizeSlashes(scenePath);
+
+            if (replacements != null)
+            {
+                // Применяем ПЕРВУЮ подошедшую замену (порядок в списке = приоритет).
+                foreach (ScenePathReplacement replacement in replacements)
+                {
+                    // Нормализуем и префикс — пользователь мог написать '\' вручную.
+                    string prefix = NormalizeSlashes(replacement.Prefix);
+                    if (string.IsNullOrEmpty(prefix))
+                    {
+                        continue;
+                    }
+                    if (displayPath.StartsWith(prefix, StringComparison.Ordinal))
+                    {
+                        string replacementValue = NormalizeSlashes(replacement.Replacement) ?? string.Empty;
+                        displayPath = replacementValue + displayPath[prefix.Length..];
+                        break;
+                    }
+                }
+            }
+
+            const string unityExtension = ".unity";
+            if (displayPath.EndsWith(unityExtension, StringComparison.OrdinalIgnoreCase))
+            {
+                displayPath = displayPath[..^unityExtension.Length];
+            }
+
+            return displayPath;
+        }
+
+        private static void SwitchScene(string scenePath)
         {
             if (Application.isPlaying)
             {
@@ -93,8 +152,8 @@ namespace PostEnot.EditorExtensions.Editor
             }
         }
 
-        static void RefreshSceneList() => _scenePaths = Directory.GetFiles("Assets", "*.unity", SearchOption.AllDirectories);
+        private static void RefreshSceneList() => _scenePaths = Directory.GetFiles("Assets", "*.unity", SearchOption.AllDirectories);
 
-        static void SceneSwitched(Scene oldScene, Scene newScene) => MainToolbar.Refresh(_elementPath);
+        private static void SceneSwitched(Scene oldScene, Scene newScene) => MainToolbar.Refresh(_elementPath);
     }
 }
